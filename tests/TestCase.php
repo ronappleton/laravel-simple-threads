@@ -71,7 +71,6 @@ class TestCase extends \Orchestra\Testbench\TestCase
     {
         return [
             ServiceProvider::class,
-            RouteServiceProvider::class,
             \Appleton\TypedConfig\ServiceProvider::class,
             PermissionServiceProvider::class,
             \Appleton\SpatieLaravelPermissionMock\ServiceProvider::class,
