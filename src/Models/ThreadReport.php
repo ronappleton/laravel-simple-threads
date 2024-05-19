@@ -21,6 +21,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
+ *
+ * @property-read $user
+ * @property-read Thread $thread
+ * @property-read Comment $comment
  */
 class ThreadReport extends Model
 {
