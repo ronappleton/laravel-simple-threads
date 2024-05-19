@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Appleton\Threads\Notifications;
 
-use Appleton\Threads\Models\Comment;
+use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Notifications\Concerns\HasConfig;
 use Appleton\Threads\Notifications\Concerns\HasUser;
 use Illuminate\Bus\Queueable;
@@ -15,7 +15,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
 
-class CommentCreated extends Notification implements ShouldQueue
+class ThreadLocked extends Notification implements ShouldQueue
 {
     use HasConfig;
     use HasUser;
@@ -25,11 +25,11 @@ class CommentCreated extends Notification implements ShouldQueue
 
     protected ?Model $user;
 
-    public function __construct(Comment $comment)
+    public function __construct(Thread $thread)
     {
-        $this->url = route('thread.show', $comment->thread->id);
+        $this->url = route('thread.show', $thread->id);
 
-        $this->user = $comment->user;
+        $this->user = $thread->user;
     }
 
     /**

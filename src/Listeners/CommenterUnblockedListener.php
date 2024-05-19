@@ -6,7 +6,7 @@ namespace Appleton\Threads\Listeners;
 
 use Appleton\Threads\Events\CommenterUnblocked;
 
-class CommentUnblockedListener
+class CommenterUnblockedListener
 {
     public function __construct(private readonly CommenterUnblocked $event)
     {

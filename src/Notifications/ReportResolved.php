@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Appleton\Threads\Notifications;
 
-use Appleton\Threads\Models\Comment;
+use Appleton\Threads\Models\ThreadReport;
 use Appleton\Threads\Notifications\Concerns\HasConfig;
 use Appleton\Threads\Notifications\Concerns\HasUser;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
 
-class CommentCreated extends Notification implements ShouldQueue
+class ReportResolved extends Notification implements ShouldQueue
 {
     use HasConfig;
     use HasUser;
@@ -23,13 +22,9 @@ class CommentCreated extends Notification implements ShouldQueue
 
     private string $url;
 
-    protected ?Model $user;
-
-    public function __construct(Comment $comment)
+    public function __construct(private readonly ThreadReport $report)
     {
-        $this->url = route('thread.show', $comment->thread->id);
-
-        $this->user = $comment->user;
+        $this->url = route('thread.show', $report->thread_id);
     }
 
     /**
@@ -38,7 +33,13 @@ class CommentCreated extends Notification implements ShouldQueue
     public function toVonage(object $notifiable): VonageMessage
     {
         return (new VonageMessage)
-            ->content(sprintf('%s - %s', $this->getMessage('sms', $this->getNameField()), $this->url));
+            ->content(
+                sprintf(
+                    '%s - %s',
+                    $this->getMessage('sms', $this->getNameField(), $this->getType()),
+                    $this->url
+                )
+            );
     }
 
     /**
@@ -49,7 +50,7 @@ class CommentCreated extends Notification implements ShouldQueue
     public function toDatabase(object $notifiable): array
     {
         return [
-            'message' => $this->getMessage('database', $this->getNameField()),
+            'message' => $this->getMessage('database', $this->getNameField(), $this->getType()),
             'url' => $this->url,
             'user_name' => $this->getUserName(),
             'avatar' => $this->getUserAvatar(),
@@ -62,7 +63,7 @@ class CommentCreated extends Notification implements ShouldQueue
     public function toBroadcast(object $notifiable): BroadcastMessage
     {
         return new BroadcastMessage([
-            'message' => $this->getMessage('push', $this->getNameField()),
+            'message' => $this->getMessage('push', $this->getNameField(), $this->getType()),
             'url' => $this->url,
             'user_name' => $this->getUserName(),
             'avatar' => $this->getUserAvatar(),
@@ -76,7 +77,7 @@ class CommentCreated extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject($this->getEmailSubject())
-            ->line($this->getMessage('email', $this->getNameField()))
+            ->line($this->getMessage('email', $this->getNameField(), $this->getType()))
             ->action('View Thread', $this->url);
     }
 
@@ -88,10 +89,15 @@ class CommentCreated extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => $this->getMessage('database', $this->getNameField()),
+            'message' => $this->getMessage('database', $this->getNameField(), $this->getType()),
             'url' => $this->url,
             'user_name' => $this->getUserName(),
             'avatar' => $this->getUserAvatar(),
         ];
+    }
+
+    public function getType(): string
+    {
+        return $this->report->comment_id ? 'comment' : 'thread';
     }
 }

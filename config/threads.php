@@ -6,15 +6,18 @@ return [
     'route_prefix' => 'api',
     'middleware' => ['api'],
     'user_model' => 'App\Models\User',
+    'user_name_field' => 'display_name',
+    'user_avatar_field' => 'avatar',
 
     'notifications' => [
         'comment_created' => [
+            'name_field' => 'commenter_name',
             'sms' => [
                 'enabled' => false,
                 'message' => 'You have a new comment from :commenter_name',
             ],
             'database' => [
-                'enabled' => false,
+                'enabled' => true,
                 'message' => 'You have a new comment from :commenter_name',
             ],
             'email' => [
@@ -23,55 +26,58 @@ return [
                 'message' => 'You have a new comment from :commenter_name',
             ],
             'push' => [
-                'enabled' => false,
+                'enabled' => true,
                 'message' => 'You have a new comment from :commenter_name',
             ],
         ],
         'commenter_blocked' => [
+            'name_field' => 'blocker_name',
             'sms' => [
                 'enabled' => false,
                 'message' => 'You have been blocked by :blocker_name',
             ],
             'database' => [
-                'enabled' => false,
+                'enabled' => true,
                 'message' => 'You have been blocked by :blocker_name',
             ],
             'email' => [
                 'enabled' => true,
-                'subject' => 'You have been blocked',
+                'subject' => 'You have been blocked from starting threads and commenting',
                 'message' => 'You have been blocked by :blocker_name',
             ],
             'push' => [
-                'enabled' => false,
+                'enabled' => true,
                 'message' => 'You have been blocked by :blocker_name',
             ],
         ],
         'commenter_unblocked' => [
+            'name_field' => 'unblocker_name',
             'sms' => [
                 'enabled' => false,
                 'message' => 'You have been unblocked by :unblocker_name',
             ],
             'database' => [
-                'enabled' => false,
+                'enabled' => true,
                 'message' => 'You have been unblocked by :unblocker_name',
             ],
             'email' => [
                 'enabled' => true,
-                'subject' => 'You have been unblocked',
+                'subject' => 'You have been unblocked from starting threads and commenting',
                 'message' => 'You have been unblocked by :unblocker_name',
             ],
             'push' => [
-                'enabled' => false,
+                'enabled' => true,
                 'message' => 'You have been unblocked by :unblocker_name',
             ],
         ],
         'like_received' => [
+            'name_field' => 'liker_name',
             'sms' => [
                 'enabled' => false,
                 'message' => 'You have a new like from :liker_name',
             ],
             'database' => [
-                'enabled' => false,
+                'enabled' => true,
                 'message' => 'You have a new like from :liker_name',
             ],
             'email' => [
@@ -80,55 +86,58 @@ return [
                 'message' => 'You have a new like from :liker_name',
             ],
             'push' => [
-                'enabled' => false,
+                'enabled' => true,
                 'message' => 'You have a new like from :liker_name',
             ],
         ],
         'report_received' => [
+            'name_field' => 'type',
             'sms' => [
                 'enabled' => false,
-                'message' => 'You have a new report from :reporter_name',
+                'message' => 'You have a received a :type report',
             ],
             'database' => [
                 'enabled' => false,
-                'message' => 'You have a new report from :reporter_name',
+                'message' => 'You have a received a :type report',
             ],
             'email' => [
-                'enabled' => true,
+                'enabled' => false,
                 'subject' => 'New Report',
-                'message' => 'You have a new report from :reporter_name',
+                'message' => 'You have a received a :type report',
             ],
             'push' => [
                 'enabled' => false,
-                'message' => 'You have a new report from :reporter_name',
+                'message' => 'You have a received a :type report',
             ],
         ],
         'report_resolved' => [
+            'name_field' => 'type',
             'sms' => [
                 'enabled' => false,
-                'message' => 'Your report has been resolved',
+                'message' => 'Your :type report has been resolved',
             ],
             'database' => [
                 'enabled' => false,
-                'message' => 'Your report has been resolved',
+                'message' => 'Your :type report has been resolved',
             ],
             'email' => [
-                'enabled' => true,
+                'enabled' => false,
                 'subject' => 'Report Resolved',
-                'message' => 'Your report has been resolved',
+                'message' => 'Your :type report has been resolved',
             ],
             'push' => [
                 'enabled' => false,
-                'message' => 'Your report has been resolved',
+                'message' => 'Your :type report has been resolved',
             ],
         ],
         'thread_created' => [
+            'name_field' => 'creator_name',
             'sms' => [
                 'enabled' => false,
                 'message' => 'You have a new thread from :creator_name',
             ],
             'database' => [
-                'enabled' => false,
+                'enabled' => true,
                 'message' => 'You have a new thread from :creator_name',
             ],
             'email' => [
@@ -137,7 +146,7 @@ return [
                 'message' => 'You have a new thread from :creator_name',
             ],
             'push' => [
-                'enabled' => false,
+                'enabled' => true,
                 'message' => 'You have a new thread from :creator_name',
             ],
         ],
@@ -147,7 +156,7 @@ return [
                 'message' => 'Your thread has been locked',
             ],
             'database' => [
-                'enabled' => false,
+                'enabled' => true,
                 'message' => 'Your thread has been locked',
             ],
             'email' => [
@@ -156,7 +165,7 @@ return [
                 'message' => 'Your thread has been locked',
             ],
             'push' => [
-                'enabled' => false,
+                'enabled' => true,
                 'message' => 'Your thread has been locked',
             ],
         ],
@@ -166,7 +175,7 @@ return [
                 'message' => 'Your thread has been unlocked',
             ],
             'database' => [
-                'enabled' => false,
+                'enabled' => true,
                 'message' => 'Your thread has been unlocked',
             ],
             'email' => [
@@ -175,7 +184,7 @@ return [
                 'message' => 'Your thread has been unlocked',
             ],
             'push' => [
-                'enabled' => false,
+                'enabled' => true,
                 'message' => 'Your thread has been unlocked',
             ],
         ],

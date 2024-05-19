@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $deleted_at
  * @property string $created_at
  * @property string $updated_at
+ * @property-read $blockedUser
+ * @property-read $blockerUser
  */
 class BlockedCommenter extends Model
 {
