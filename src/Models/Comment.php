@@ -22,7 +22,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $deleted_at
  * @property string $created_at
  * @property string $updated_at
- *
  * @property-read Thread $thread
  * @property-read $user
  */

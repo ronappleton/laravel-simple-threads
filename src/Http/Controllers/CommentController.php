@@ -13,8 +13,6 @@ use Appleton\Threads\Http\Resources\CommentResource;
 use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Services\ThreadService;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -78,7 +76,7 @@ class CommentController extends Controller
 
     public function restore(string $id): Response
     {
-        $comment  = Comment::withTrashed()->findOrFail($id);
+        $comment = Comment::withTrashed()->findOrFail($id);
 
         $this->authorize('restore', $comment);
 

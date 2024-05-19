@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Appleton\Threads\Policies;
 
-use App\User;
-use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Models\ThreadReport;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Contracts\Auth\Authenticatable;

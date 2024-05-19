@@ -53,7 +53,7 @@ class DestroyTest extends TestCase
         ]);
 
         ThreadReport::factory()->create([
-            'thread_id' => $thread->id
+            'thread_id' => $thread->id,
         ]);
 
         $response = $this->actingAs($user)->json('delete', route('threads.destroy', [$thread->id]));

@@ -41,13 +41,14 @@ class LockTest extends TestCase
 
         $this->assertDatabaseHas('threads', [
             'id' => $thread->id,
-            'locked_at' => Carbon::now()
+            'locked_at' => Carbon::now(),
         ]);
 
         Event::assertDispatched(ThreadLocked::class, function ($event) use ($thread) {
             return $event->getThread()->id === $thread->id;
         });
     }
+
     public function testLockThreadWhenUserIsOwnerIsAccepted(): void
     {
         TestTime::freeze(Carbon::now());
@@ -67,7 +68,7 @@ class LockTest extends TestCase
 
         $this->assertDatabaseHas('threads', [
             'id' => $thread->id,
-            'locked_at' => Carbon::now()
+            'locked_at' => Carbon::now(),
         ]);
     }
 
@@ -91,7 +92,7 @@ class LockTest extends TestCase
 
         $this->assertDatabaseMissing('threads', [
             'id' => $thread->id,
-            'locked_at' => Carbon::now()
+            'locked_at' => Carbon::now(),
         ]);
     }
 }

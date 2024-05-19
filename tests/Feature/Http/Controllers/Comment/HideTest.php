@@ -8,7 +8,6 @@ use Appleton\SpatieLaravelPermissionMock\Models\PermissionUuid;
 use Appleton\SpatieLaravelPermissionMock\Models\User;
 use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
-use Carbon\Carbon;
 use Tests\TestCase;
 
 class HideTest extends TestCase

@@ -6,7 +6,6 @@ namespace Tests\Feature\Models;
 
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
 use Appleton\Threads\Models\Thread;
-use Appleton\Threads\Models\ThreadLike;
 use Tests\TestCase;
 
 class ThreadLikeTest extends TestCase

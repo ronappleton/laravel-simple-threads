@@ -8,8 +8,8 @@ use Appleton\SpatieLaravelPermissionMock\Models\PermissionUuid;
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
 use Appleton\Threads\Events\CommenterUnblocked;
 use Appleton\Threads\Models\BlockedCommenter;
-use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Models\Comment;
+use Appleton\Threads\Models\Thread;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Event;
 use Spatie\TestTime\TestTime;
@@ -52,7 +52,7 @@ class UnBlockCommenterTest extends TestCase
             'deleted_at' => null,
         ]);
 
-        $response = $this->actingAs($adminUser)->json('post', route('threads.commenter.unblock', [$user->id]),[
+        $response = $this->actingAs($adminUser)->json('post', route('threads.commenter.unblock', [$user->id]), [
             'unblock_reason' => 'This is the reason',
         ]);
 

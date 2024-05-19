@@ -11,17 +11,16 @@ use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Models\ThreadReport;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 trait ManagesReports
 {
     public function reportThread(CreateThreadReportRequest $request, Thread $thread): void
     {
         $threadReport = ThreadReport::create([
-                'thread_id' => $thread->id,
-                'user_id' => auth()->id(),
-                'reason' => $request->string('reason'),
-            ]);
+            'thread_id' => $thread->id,
+            'user_id' => auth()->id(),
+            'reason' => $request->string('reason'),
+        ]);
 
         event(new ReportReceived($threadReport));
     }
@@ -29,10 +28,10 @@ trait ManagesReports
     public function reportComment(CreateThreadReportRequest $request, Comment $comment): void
     {
         $threadReport = ThreadReport::create([
-                'comment_id' => $comment->id,
-                'user_id' => auth()->id(),
-                'reason' => $request->string('reason'),
-            ]);
+            'comment_id' => $comment->id,
+            'user_id' => auth()->id(),
+            'reason' => $request->string('reason'),
+        ]);
 
         event(new ReportReceived($threadReport));
     }

@@ -22,7 +22,6 @@ class UnLikeTest extends TestCase
 
         $thread->likes()->create(['user_id' => $user->id]);
 
-
         $response = $this->actingAs($user)->json('post', route('threads.like', [$thread->id]));
 
         $response->assertStatus(202);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http\Controllers\Thread;
 
-use Appleton\SpatieLaravelPermissionMock\Models\PermissionUuid;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Models\ThreadReport;
 use Carbon\Carbon;
@@ -56,7 +55,7 @@ class RestoreTest extends TestCase
 
         $this->assertDatabaseHas('threads', [
             'id' => $thread->id,
-            'deleted_at' => null
+            'deleted_at' => null,
         ]);
     }
 
@@ -79,7 +78,7 @@ class RestoreTest extends TestCase
 
         $this->assertDatabaseHas('threads', [
             'id' => $thread->id,
-            'deleted_at' => Carbon::now()
+            'deleted_at' => Carbon::now(),
         ]);
     }
 }

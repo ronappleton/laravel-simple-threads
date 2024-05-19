@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use Appleton\Threads\Models\BlockedCommenter;
 use Illuminate\Database\Eloquent\Factories\Factory;
+
 class BlockedCommenterFactory extends Factory
 {
     /**

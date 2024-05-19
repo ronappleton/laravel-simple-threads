@@ -16,9 +16,9 @@ trait ManagesComments
     public function createComment(Thread $thread, CreateCommentRequest $request): void
     {
         $comment = Comment::create($request->validated() + [
-                'thread_id' => $thread->id,
-                'user_id' => auth()->id(),
-            ]);
+            'thread_id' => $thread->id,
+            'user_id' => auth()->id(),
+        ]);
 
         event(new CommentCreated($comment));
     }

@@ -111,6 +111,4 @@ class StoreTest extends TestCase
             return $event->getComment()->thread->id === $thread->id;
         });
     }
-
-
 }

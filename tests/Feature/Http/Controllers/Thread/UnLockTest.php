@@ -46,6 +46,7 @@ class UnLockTest extends TestCase
             return $event->getThread()->id === $thread->id;
         });
     }
+
     public function testUnlockThreadIfUserIsOwnerAndReportExistsIsForbidden(): void
     {
         TestTime::freeze(Carbon::now());
@@ -75,7 +76,7 @@ class UnLockTest extends TestCase
 
         $this->assertDatabaseHas('threads', [
             'id' => $thread->id,
-            'locked_at' => Carbon::now()
+            'locked_at' => Carbon::now(),
         ]);
     }
 

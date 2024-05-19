@@ -101,7 +101,7 @@ class ThreadPolicy
     private function userIsOwner(Authenticatable $user, Thread $thread): bool
     {
         return method_exists($user, 'getAttribute')
-            &&  $user->getAttribute('id') === $thread->user_id;
+            && $user->getAttribute('id') === $thread->user_id;
     }
 
     private function can(Authenticatable $user, string $ability): bool

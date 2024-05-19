@@ -23,7 +23,7 @@ class UnblockCommenterCommand extends Command
         $commenters = BlockedCommenter::where('expires_at', '<=', Carbon::now())->get();
 
         $commenters->each(function (BlockedCommenter $commenter) use ($threadService) {
-            $request =  new UnblockCommenterRequest(['unblock_reason' => 'Scheduled unblock']);
+            $request = new UnblockCommenterRequest(['unblock_reason' => 'Scheduled unblock']);
             $threadService->unblockCommenter($request, $commenter->blocked_user_id);
         });
 

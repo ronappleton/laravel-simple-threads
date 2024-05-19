@@ -124,7 +124,7 @@ class CommentPolicy
     private function userIsOwner(Authenticatable $user, Comment $comment): bool
     {
         return method_exists($user, 'getAttribute')
-            &&  $user->getAttribute('id') === $comment->user_id;
+            && $user->getAttribute('id') === $comment->user_id;
     }
 
     private function can(Authenticatable $user, string $ability): bool

@@ -17,7 +17,6 @@ Route::prefix('threads')->group(function () {
     });
 });
 
-
 Route::prefix('threads')->group(function () {
     Route::middleware(config()->array('threads.middleware', ['api', 'auth:api']))->group(function () {
         Route::post('/', 'ThreadController@store')->name('threads.store');

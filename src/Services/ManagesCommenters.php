@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Appleton\Threads\Services;
 
-use Appleton\Threads\DTOs\BlockedCommenterDTO;
 use Appleton\Threads\Events\CommenterBlocked;
 use Appleton\Threads\Events\CommenterUnblocked;
 use Appleton\Threads\Http\Requests\CreateBlockCommenterRequest;
@@ -13,8 +12,6 @@ use Appleton\Threads\Models\BlockedCommenter;
 use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
 use Carbon\Carbon;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 trait ManagesCommenters
 {

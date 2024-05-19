@@ -6,7 +6,6 @@ namespace Appleton\Threads;
 
 use Appleton\Threads\Console\Commands\UnblockCommenterCommand;
 use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider

@@ -24,7 +24,7 @@ class PinTest extends TestCase
         ]);
 
         $threadReport = ThreadReport::factory()->create([
-            'thread_id' => $thread->id
+            'thread_id' => $thread->id,
         ]);
 
         $this->assertDatabaseHas('thread_reports', [
@@ -56,7 +56,7 @@ class PinTest extends TestCase
 
         $this->assertDatabaseHas('threads', [
             'id' => $thread->id,
-            'pinned_at' => Carbon::now()
+            'pinned_at' => Carbon::now(),
         ]);
     }
 }

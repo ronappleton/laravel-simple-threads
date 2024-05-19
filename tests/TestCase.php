@@ -5,23 +5,15 @@ declare(strict_types=1);
 namespace Tests;
 
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
-use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Providers\RouteServiceProvider;
 use Appleton\Threads\ServiceProvider;
-use Illuminate\Contracts\Auth\Access\Authorizable;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\PermissionServiceProvider;
-use Spatie\Permission\Traits\HasPermissions;
-use Spatie\Permission\Traits\HasRoles;
-use Tests\Models\Permission;
-use Tests\Models\Role;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
