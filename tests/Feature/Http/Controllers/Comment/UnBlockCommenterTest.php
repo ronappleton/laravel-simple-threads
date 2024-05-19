@@ -6,16 +6,23 @@ namespace Tests\Feature\Http\Controllers\Comment;
 
 use Appleton\SpatieLaravelPermissionMock\Models\PermissionUuid;
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
+use Appleton\Threads\Events\CommenterUnblocked;
 use Appleton\Threads\Models\BlockedCommenter;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Models\Comment;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Event;
+use Spatie\TestTime\TestTime;
 use Tests\TestCase;
 
 class UnBlockCommenterTest extends TestCase
 {
     public function testUnBlockCommenterWithPermissionIsAccepted(): void
     {
+        Event::fake(CommenterUnblocked::class);
+
+        TestTime::freeze(Carbon::now());
+
         config()->set('threads.user_model', UserUuid::class);
 
         $threaded = $this->getNewThreaded();
@@ -39,15 +46,22 @@ class UnBlockCommenterTest extends TestCase
             'hidden_at' => Carbon::now(),
         ]);
 
+        BlockedCommenter::factory()->create([
+            'blocker_user_id' => $adminUser->id,
+            'blocked_user_id' => $user->id,
+            'deleted_at' => null,
+        ]);
+
         $response = $this->actingAs($adminUser)->json('post', route('threads.commenter.unblock', [$user->id]),[
             'unblock_reason' => 'This is the reason',
         ]);
 
         $response->assertAccepted();
 
-        $this->assertDatabaseMissing('blocked_commenters', [
+        $this->assertDatabaseHas('blocked_commenters', [
             'blocker_user_id' => $adminUser->id,
             'blocked_user_id' => $user->id,
+            'deleted_at' => Carbon::now(),
         ]);
 
         $this->assertDatabaseHas('threads', [
@@ -59,6 +73,10 @@ class UnBlockCommenterTest extends TestCase
             'id' => $comment->id,
             'hidden_at' => null,
         ]);
+
+        Event::assertDispatched(CommenterUnblocked::class, function ($event) use ($comment) {
+            return $event->getBlockedCommenter()->blocked_user_id === $comment->user_id;
+        });
     }
 
     public function testBlockCommenterWithoutPermissionIsForbidden(): void

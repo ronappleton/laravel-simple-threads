@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Controllers\Comment;
 
 use Appleton\SpatieLaravelPermissionMock\Models\User;
+use Appleton\Threads\Events\ReportReceived;
 use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class ReportTest extends TestCase
@@ -21,6 +23,8 @@ class ReportTest extends TestCase
 
     public function testReportingCommentUnauthenticatedAccepted(): void
     {
+        Event::fake(ReportReceived::class);
+
         $user = $this->getNewUser();
         $threaded = $this->getNewThreaded();
 
@@ -47,8 +51,12 @@ class ReportTest extends TestCase
             'user_id' => null,
             'comment_id' => $comment->id,
             'reason' => 'This is a reason',
-            'created_at' => Carbon::now(),
+            'created_at' => Carbon::now()->toDateTimeString(),
         ]);
+
+        Event::assertDispatched(ReportReceived::class, function ($event) use ($comment) {
+            return $event->getReport()->comment->id === $comment->id;
+        });
     }
 
     public function testReportingCommentAuthenticatedAccepted(): void

@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Controllers\Thread;
 
 use Appleton\SpatieLaravelPermissionMock\Models\PermissionUuid;
+use Appleton\Threads\Events\ThreadLocked;
 use Appleton\Threads\Models\Thread;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Event;
 use Spatie\TestTime\TestTime;
 use Tests\TestCase;
 
@@ -14,6 +16,8 @@ class LockTest extends TestCase
 {
     public function testLockThreadWithPermissionIsAccepted(): void
     {
+        Event::fake(ThreadLocked::class);
+
         TestTime::freeze(Carbon::now());
 
         $threaded = $this->getNewThreaded();
@@ -39,6 +43,10 @@ class LockTest extends TestCase
             'id' => $thread->id,
             'locked_at' => Carbon::now()
         ]);
+
+        Event::assertDispatched(ThreadLocked::class, function ($event) use ($thread) {
+            return $event->getThread()->id === $thread->id;
+        });
     }
     public function testLockThreadWhenUserIsOwnerIsAccepted(): void
     {

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Controllers\Comment;
 
 use Appleton\SpatieLaravelPermissionMock\Models\User;
+use Appleton\Threads\Events\CommentCreated;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Models\ThreadReport;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class StoreTest extends TestCase
@@ -87,6 +89,8 @@ class StoreTest extends TestCase
 
     public function testCreateCommentAuthenticatedCreated()
     {
+        Event::fake(CommentCreated::class);
+
         $user = $this->getNewUser();
         $threaded = $this->getNewThreaded();
 
@@ -102,6 +106,10 @@ class StoreTest extends TestCase
         ]);
 
         $response->assertCreated();
+
+        Event::assertDispatched(CommentCreated::class, function ($event) use ($thread) {
+            return $event->getComment()->thread->id === $thread->id;
+        });
     }
 
 

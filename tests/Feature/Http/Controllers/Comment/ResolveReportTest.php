@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Controllers\Comment;
 
 use Appleton\SpatieLaravelPermissionMock\Models\PermissionUuid;
+use Appleton\Threads\Events\ReportResolved;
 use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Models\ThreadReport;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Event;
 use Spatie\TestTime\TestTime;
 use Tests\TestCase;
 
@@ -16,6 +18,8 @@ class ResolveReportTest extends TestCase
 {
     public function testResolveCommentReportWithPermissionIsAccepted(): void
     {
+        Event::fake(ReportResolved::class);
+
         TestTime::freeze(Carbon::now());
 
         $threaded = $this->getNewThreaded();
@@ -54,6 +58,10 @@ class ResolveReportTest extends TestCase
             'resolved_at' => Carbon::now(),
             'deleted_at' => Carbon::now(),
         ]);
+
+        Event::assertDispatched(ReportResolved::class, function ($event) use ($comment) {
+            return $event->getReport()->comment->id === $comment->id;
+        });
     }
 
     public function testResolveThreadReportWhenUnauthenticatedIsForbidden(): void

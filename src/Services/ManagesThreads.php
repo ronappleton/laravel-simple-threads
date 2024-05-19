@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Appleton\Threads\Services;
 
+use Appleton\Threads\Events\LikeReceived;
+use Appleton\Threads\Events\ThreadCreated;
+use Appleton\Threads\Events\ThreadLocked;
+use Appleton\Threads\Events\ThreadUnlocked;
 use Appleton\Threads\Http\Requests\CreateThreadRequest;
 use Appleton\Threads\Http\Requests\UpdateThreadRequest;
 use Appleton\Threads\Models\Thread;
@@ -14,7 +18,9 @@ trait ManagesThreads
 {
     public function createThread(CreateThreadRequest $request): void
     {
-        Thread::create($request->validated());
+        $thread = Thread::create($request->validated());
+
+        event(new ThreadCreated($thread));
     }
 
     public function updateThread(Thread $thread, UpdateThreadRequest $request): void
@@ -25,11 +31,15 @@ trait ManagesThreads
     public function lockThread(Thread $thread): void
     {
         $thread->update(['locked_at' => Carbon::now()]);
+
+        event(new ThreadLocked($thread));
     }
 
     public function unlockThread(Thread $thread): void
     {
         $thread->update(['locked_at' => null]);
+
+        event(new ThreadUnlocked($thread));
     }
 
     public function pinThread(Thread $thread): void
@@ -71,10 +81,12 @@ trait ManagesThreads
     {
         $user = auth()->user();
 
-        ThreadLike::create([
+        $threadLike = ThreadLike::create([
             'thread_id' => $thread->id,
             'user_id' => $user->id,
         ]);
+
+        event(new LikeReceived($threadLike));
     }
 
     public function unlikeThread(Thread $thread): void

@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http\Controllers\Thread;
 
+use Appleton\Threads\Events\ThreadCreated;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class StoreTest extends TestCase
 {
     public function testStoreThreadAuthenticatedIsCreated(): void
     {
+        Event::fake(ThreadCreated::class);
+
         $user = $this->getNewUser();
 
         $response = $this->actingAs($user)->json('post', route('threads.store'), [
@@ -21,6 +25,10 @@ class StoreTest extends TestCase
         ]);
 
         $response->assertCreated();
+
+        Event::assertDispatched(ThreadCreated::class, function ($event) use ($user) {
+            return $event->getThread()->user_id === $user->id;
+        });
     }
 
     public function testStoreThreadUnauthenticatedIsForbidden(): void

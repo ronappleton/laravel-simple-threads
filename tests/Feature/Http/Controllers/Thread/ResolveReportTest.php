@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Controllers\Thread;
 
 use Appleton\SpatieLaravelPermissionMock\Models\PermissionUuid;
+use Appleton\Threads\Events\ReportResolved;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Models\ThreadReport;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Event;
 use Spatie\TestTime\TestTime;
 use Tests\TestCase;
 
@@ -15,6 +17,8 @@ class ResolveReportTest extends TestCase
 {
     public function testResolveThreadReportWithPermissionIsAccepted(): void
     {
+        Event::fake(ReportResolved::class);
+
         TestTime::freeze(Carbon::now());
 
         $threaded = $this->getNewThreaded();
@@ -47,6 +51,10 @@ class ResolveReportTest extends TestCase
             'resolved_at' => Carbon::now(),
             'deleted_at' => Carbon::now(),
         ]);
+
+        Event::assertDispatched(ReportResolved::class, function ($event) use ($thread) {
+            return $event->getReport()->thread->id === $thread->id;
+        });
     }
 
     public function testResolveThreadReportWhenUnauthenticatedIsForbidden(): void

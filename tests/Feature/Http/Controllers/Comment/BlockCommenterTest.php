@@ -6,8 +6,10 @@ namespace Tests\Feature\Http\Controllers\Comment;
 
 use Appleton\SpatieLaravelPermissionMock\Models\PermissionUuid;
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
+use Appleton\Threads\Events\CommenterBlocked;
 use Appleton\Threads\Models\Thread;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Event;
 use Spatie\TestTime\TestTime;
 use Tests\TestCase;
 
@@ -15,6 +17,8 @@ class BlockCommenterTest extends TestCase
 {
     public function testBlockCommenterWithPermissionIsAccepted(): void
     {
+        Event::fake(CommenterBlocked::class);
+
         config()->set('threads.user_model', UserUuid::class);
 
         TestTime::freeze(Carbon::now());
@@ -58,6 +62,10 @@ class BlockCommenterTest extends TestCase
             'id' => $thread->id,
             'hidden_at' => Carbon::now(),
         ]);
+
+        Event::assertDispatched(CommenterBlocked::class, function ($event) use ($user) {
+            return $event->getBlockedCommenter()->blockedUser->id === $user->id;
+        });
     }
 
     public function testBlockCommenterWithoutPermissionIsForbidden(): void
