@@ -13,6 +13,9 @@ class ServiceProvider extends BaseServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/threads.php', 'threads');
+
+        $this->app->register(Providers\EventServiceProvider::class);
+        $this->app->register(Providers\RouteServiceProvider::class);
     }
 
     public function boot(): void

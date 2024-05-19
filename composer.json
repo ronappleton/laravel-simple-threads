@@ -36,8 +36,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Appleton\\Threads\\ServiceProvider",
-                "Appleton\\Threads\\RouteServiceProvider"
+                "Appleton\\Threads\\ServiceProvider"
             ]
         }
     }

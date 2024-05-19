@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Spatie\TestTime\TestTime;
 use Tests\TestCase;
 
-class UnBlockCommentersTest extends TestCase
+class UnblockCommentersTest extends TestCase
 {
     public function testCanUnBlockCommenters(): void
     {

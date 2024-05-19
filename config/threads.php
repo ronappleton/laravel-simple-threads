@@ -189,4 +189,16 @@ return [
             ],
         ],
     ],
+
+    'listeners' => [
+        'comment_created' => true,
+        'commenter_blocked' => true,
+        'commenter_unblocked' => true,
+        'like_received' => true,
+        'report_received' => true,
+        'report_resolved' => true,
+        'thread_created' => true,
+        'thread_locked' => true,
+        'thread_unlocked' => true,
+    ],
 ];
