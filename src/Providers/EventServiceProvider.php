@@ -4,61 +4,66 @@ declare(strict_types=1);
 
 namespace Appleton\Threads\Providers;
 
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
+use Appleton\Threads\Events\CommentCreated;
+use Appleton\Threads\Events\CommenterBlocked;
+use Appleton\Threads\Events\CommenterUnblocked;
+use Appleton\Threads\Events\LikeReceived;
+use Appleton\Threads\Events\ReportReceived;
+use Appleton\Threads\Events\ReportResolved;
+use Appleton\Threads\Events\ThreadCreated;
+use Appleton\Threads\Events\ThreadLocked;
+use Appleton\Threads\Events\ThreadUnlocked;
+use Appleton\Threads\Listeners\CommentCreatedListener;
+use Appleton\Threads\Listeners\CommenterBlockedListener;
+use Appleton\Threads\Listeners\CommenterUnblockedListener;
+use Appleton\Threads\Listeners\LikeReceivedListener;
+use Appleton\Threads\Listeners\ReportReceivedListener;
+use Appleton\Threads\Listeners\ReportResolvedListener;
+use Appleton\Threads\Listeners\ThreadCreatedListener;
+use Appleton\Threads\Listeners\ThreadLockedListener;
+use Appleton\Threads\Listeners\ThreadUnlockedListener;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
 {
-    private string $eventFqdn = 'Appleton\Threads\Events\\';
-
-    private string $listenerFqdn = 'Appleton\Threads\Listeners\\';
-
     /**
-     * The events and their listeners that should be registered.
+     * The event listener mappings for the application.
      *
-     * @var array<int, string>
+     * @var array<class-string, array<int, class-string>>
      */
-    protected array $shouldListen = [
-        'comment_created',
-        'commenter_blocked',
-        'commenter_unblocked',
-        'like_received',
-        'report_received',
-        'report_resolved',
-        'thread_created',
-        'thread_locked',
-        'thread_unlocked',
+    protected $listen = [
+        CommentCreated::class => [
+            CommentCreatedListener::class,
+        ],
+        CommenterBlocked::class => [
+            CommenterBlockedListener::class,
+        ],
+        CommenterUnblocked::class => [
+            CommenterUnblockedListener::class,
+        ],
+
+        LikeReceived::class => [
+            LikeReceivedListener::class,
+        ],
+        ReportReceived::class => [
+            ReportReceivedListener::class,
+        ],
+        ReportResolved::class => [
+            ReportResolvedListener::class,
+        ],
+        ThreadCreated::class => [
+            ThreadCreatedListener::class,
+        ],
+        ThreadLocked::class => [
+            ThreadLockedListener::class,
+        ],
+        ThreadUnlocked::class => [
+            ThreadUnlockedListener::class,
+        ],
     ];
 
-    public function boot(Dispatcher $events): void
+    public function boot(): void
     {
-        collect($this->shouldListen)
-            ->filter(fn (string $event) => $this->shouldListen($event))
-            ->each(fn (string $event) => $this->listen($event));
-    }
-
-    private function shouldListen(string $event): bool
-    {
-        return config()->boolean("threads.listeners.{$event}", false);
-    }
-
-    private function listen(string $event): void
-    {
-        Event::listen($this->getEvent($event), $this->getListener($event));
-    }
-
-    private function getEvent(string $event): string
-    {
-        return sprintf('%s%s', $this->eventFqdn, Str::studly($event));
-    }
-
-    /**
-     * @return array<int, string>
-     */
-    private function getListener(string $event): array
-    {
-        return [sprintf('%s%sListener', $this->listenerFqdn, Str::studly($event)), 'handle'];
+        parent::boot();
     }
 }

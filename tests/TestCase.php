@@ -6,10 +6,11 @@ namespace Tests;
 
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
 use Appleton\Threads\Models\Thread;
-use Appleton\Threads\Providers\RouteServiceProvider;
+use Appleton\Threads\Providers\EventServiceProvider;
 use Appleton\Threads\ServiceProvider;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Schema;
@@ -29,6 +30,8 @@ class TestCase extends \Orchestra\Testbench\TestCase
 
         Schema::create('threaded', function ($table) {
             $table->uuid('id')->primary();
+            $table->foreignUuid('user_id')->nullable()->constrained();
+            $table->foreignUuid('deep_threaded_id')->nullable()->constrained();
             $table->timestamps();
         });
 
@@ -51,6 +54,16 @@ class TestCase extends \Orchestra\Testbench\TestCase
             public function threads(): MorphMany
             {
                 return $this->morphMany(Thread::class, 'threaded');
+            }
+
+            public function deepThreaded(): BelongsTo
+            {
+                return $this->belongsTo(self::class);
+            }
+
+            public function user(): BelongsTo
+            {
+                return $this->belongsTo(UserUuid::class);
             }
         };
 

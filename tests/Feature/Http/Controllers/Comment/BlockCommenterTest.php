@@ -7,6 +7,7 @@ namespace Tests\Feature\Http\Controllers\Comment;
 use Appleton\SpatieLaravelPermissionMock\Models\PermissionUuid;
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
 use Appleton\Threads\Events\CommenterBlocked;
+use Appleton\Threads\Listeners\CommenterBlockedListener;
 use Appleton\Threads\Models\Thread;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Event;
@@ -40,6 +41,8 @@ class BlockCommenterTest extends TestCase
             'user_id' => $user->id,
             'content' => 'This is a comment',
         ]);
+
+        Event::assertListening(CommenterBlocked::class, CommenterBlockedListener::class);
 
         $response = $this->actingAs($adminUser)->json('post', route('threads.commenter.block', [$user->id]), [
             'reason' => 'This is a reason',

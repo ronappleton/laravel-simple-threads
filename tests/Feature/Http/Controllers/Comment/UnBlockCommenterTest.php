@@ -7,6 +7,7 @@ namespace Tests\Feature\Http\Controllers\Comment;
 use Appleton\SpatieLaravelPermissionMock\Models\PermissionUuid;
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
 use Appleton\Threads\Events\CommenterUnblocked;
+use Appleton\Threads\Listeners\CommenterUnblockedListener;
 use Appleton\Threads\Models\BlockedCommenter;
 use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
@@ -51,6 +52,8 @@ class UnBlockCommenterTest extends TestCase
             'blocked_user_id' => $user->id,
             'deleted_at' => null,
         ]);
+
+        Event::assertListening(CommenterUnblocked::class, CommenterUnblockedListener::class);
 
         $response = $this->actingAs($adminUser)->json('post', route('threads.commenter.unblock', [$user->id]), [
             'unblock_reason' => 'This is the reason',

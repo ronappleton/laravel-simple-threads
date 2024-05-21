@@ -6,6 +6,7 @@ namespace Tests\Feature\Http\Controllers\Comment;
 
 use Appleton\SpatieLaravelPermissionMock\Models\User;
 use Appleton\Threads\Events\CommentCreated;
+use Appleton\Threads\Listeners\CommentCreatedListener;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Models\ThreadReport;
 use Carbon\Carbon;
@@ -100,6 +101,8 @@ class StoreTest extends TestCase
             'user_id' => $user->id,
             'content' => 'This is a comment',
         ]);
+
+        Event::assertListening(CommentCreated::class, CommentCreatedListener::class);
 
         $response = $this->actingAs($user)->json('post', route('threads.comment.store', [$thread->id]), [
             'content' => 'This is a comment',

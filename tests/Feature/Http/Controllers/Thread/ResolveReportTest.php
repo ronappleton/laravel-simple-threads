@@ -6,6 +6,7 @@ namespace Tests\Feature\Http\Controllers\Thread;
 
 use Appleton\SpatieLaravelPermissionMock\Models\PermissionUuid;
 use Appleton\Threads\Events\ReportResolved;
+use Appleton\Threads\Listeners\ReportResolvedListener;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Models\ThreadReport;
 use Carbon\Carbon;
@@ -39,6 +40,8 @@ class ResolveReportTest extends TestCase
             'user_id' => $user->id,
             'reason' => 'This is a reason',
         ]);
+
+        Event::assertListening(ReportResolved::class, ReportResolvedListener::class);
 
         $response = $this->actingAs($adminUser)->json('post', route('threads.report.resolve', [$threadReport->id]));
 

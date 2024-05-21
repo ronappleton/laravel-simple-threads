@@ -7,17 +7,17 @@ namespace Appleton\Threads\Listeners;
 use Appleton\Threads\Events\CommenterUnblocked;
 use Appleton\Threads\Notifications\CommenterUnblocked as CommenterUnblockedNotification;
 
-readonly class CommenterUnblockedListener
+class CommenterUnblockedListener
 {
-    public function __construct(private CommenterUnblocked $event)
+    public function handle(CommenterUnblocked $event): void
     {
-    }
+        if (!config()->boolean('threads.listeners.commenter_unblocked', false)) {
+            return;
+        }
 
-    public function handle(): void
-    {
-        $blockedUser = $this->event->getBlockedCommenter()->blockedUser;
+        $blockedUser = $event->getBlockedCommenter()->blockedUser;
 
         /** @phpstan-ignore-next-line */
-        $blockedUser->notify(new CommenterUnblockedNotification($this->event->getBlockedCommenter()));
+        $blockedUser->notify(new CommenterUnblockedNotification($event->getBlockedCommenter()));
     }
 }

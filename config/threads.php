@@ -8,6 +8,21 @@ return [
     'user_model' => 'App\Models\User',
     'user_name_field' => 'display_name',
     'user_avatar_field' => 'avatar',
+    'thread_show_url' => 'http://localhost:8000/thread',
+    'threaded_user_relations' => [
+        [
+            'fundraiser',
+        ],
+        [
+            'cause',
+            'business',
+            'user',
+        ],
+        [
+            'cause',
+            'user',
+        ],
+    ],
 
     'notifications' => [
         'comment_created' => [

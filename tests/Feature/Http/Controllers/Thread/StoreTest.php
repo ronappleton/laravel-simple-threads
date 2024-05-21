@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Controllers\Thread;
 
 use Appleton\Threads\Events\ThreadCreated;
+use Appleton\Threads\Listeners\ThreadCreatedListener;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
@@ -15,6 +16,8 @@ class StoreTest extends TestCase
         Event::fake(ThreadCreated::class);
 
         $user = $this->getNewUser();
+
+        Event::assertListening(ThreadCreated::class, ThreadCreatedListener::class);
 
         $response = $this->actingAs($user)->json('post', route('threads.store'), [
             'threaded_id' => '1',

@@ -15,22 +15,22 @@ trait HasConfig
 
     public function smsEnabled(): bool
     {
-        return config()->bool("threads.notifications.{$this->getSnakeName()}.sms_enabled", false);
+        return config()->boolean("threads.notifications.{$this->getSnakeName()}.sms_enabled", false);
     }
 
     public function databaseEnabled(): bool
     {
-        return config()->bool("threads.notifications.{$this->getSnakeName()}.database_enabled", false);
+        return config()->boolean("threads.notifications.{$this->getSnakeName()}.database_enabled", false);
     }
 
     public function emailEnabled(): bool
     {
-        return config()->bool("threads.notifications.{$this->getSnakeName()}.email_enabled", false);
+        return config()->boolean("threads.notifications.{$this->getSnakeName()}.email_enabled", false);
     }
 
     public function pushEnabled(): bool
     {
-        return config()->bool("threads.notifications.{$this->getSnakeName()}.push_enabled", false);
+        return config()->boolean("threads.notifications.{$this->getSnakeName()}.push_enabled", false);
     }
 
     /**
@@ -71,5 +71,10 @@ trait HasConfig
     {
         return config()
             ->string("threads.notifications.{$this->getSnakeName()}.name_field");
+    }
+
+    public function getThreadShowUrl(string $threadId): string
+    {
+        return sprintf('%s?thread=%s', config()->string('threads.thread_show_url'), $threadId);
     }
 }

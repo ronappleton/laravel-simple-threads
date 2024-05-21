@@ -24,7 +24,9 @@ class ReportReceived extends Notification implements ShouldQueue
 
     public function __construct(private readonly ThreadReport $report)
     {
-        $this->url = route('thread.show', $report->thread_id);
+        $threadId = $report->comment_id ? $report->comment->thread_id : $report->thread_id;
+
+        $this->url = $this->getThreadShowUrl($threadId);
     }
 
     /**

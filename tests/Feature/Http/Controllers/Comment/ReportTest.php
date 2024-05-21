@@ -6,6 +6,7 @@ namespace Tests\Feature\Http\Controllers\Comment;
 
 use Appleton\SpatieLaravelPermissionMock\Models\User;
 use Appleton\Threads\Events\ReportReceived;
+use Appleton\Threads\Listeners\ReportReceivedListener;
 use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
 use Carbon\Carbon;
@@ -61,6 +62,8 @@ class ReportTest extends TestCase
 
     public function testReportingCommentAuthenticatedAccepted(): void
     {
+        Event::fake(ReportReceived::class);
+
         $user = $this->getNewUser();
         $threaded = $this->getNewThreaded();
 
@@ -76,6 +79,8 @@ class ReportTest extends TestCase
             'user_id' => $user->id,
             'content' => 'This is a comment',
         ]);
+
+        Event::assertListening(ReportReceived::class, ReportReceivedListener::class);
 
         $response = $this->actingAs($user)->json('post', route('threads.comment.report', [$comment->id]), [
             'reason' => 'This is a reason',

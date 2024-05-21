@@ -43,4 +43,85 @@ class ThreadTest extends TestCase
 
         $this->assertEquals($user->id, $fetchedUser->id);
     }
+
+    public function testCanGetDeepThreadedRelationsTwoDeep(): void
+    {
+        config()->set('threads.user_model', UserUuid::class);
+
+        $oneDeep = [
+            'threaded',
+            'user',
+        ];
+
+        $threaded = $this->getNewThreaded()->user()->associate($this->getNewUser());
+        $threaded->save();
+        $user = $this->getNewUser();
+
+        $thread = Thread::factory()->create([
+            'threaded_id' => $threaded->id,
+            'threaded_type' => $threaded::class,
+            'user_id' => $user->id,
+        ]);
+
+        $deepThreadedRelations = $thread->deepNestedRelation($oneDeep);
+
+        $this->assertEquals($threaded->user->id, $deepThreadedRelations->first()->id);
+    }
+
+    public function testCanGetDeepThreadedRelationsThreeDeep(): void
+    {
+        $twoDeep = [
+            'threaded',
+            'deepThreaded',
+            'user',
+        ];
+
+        $threaded = $this->getNewThreaded();
+        $deepThreaded = $this->getNewThreaded();
+        $user = $this->getNewUser();
+        $deepThreaded->user()->associate($user)->save();
+        $threaded->deepThreaded()->associate($deepThreaded)->save();
+
+        $user2 = $this->getNewUser();
+
+        $thread = Thread::factory()->create([
+            'threaded_id' => $threaded->id,
+            'threaded_type' => $threaded::class,
+            'user_id' => $user2->id,
+        ]);
+
+        $deepThreadedRelations = $thread->deepNestedRelation($twoDeep);
+
+        $this->assertEquals($threaded->deepThreaded->user->id, $deepThreadedRelations->first()->id);
+    }
+
+    public function testCanGetDeepThreadedRelationsFourDeep(): void
+    {
+        $threeDeep = [
+            'threaded',
+            'deepThreaded',
+            'deepThreaded',
+            'user',
+        ];
+
+        $threaded = $this->getNewThreaded();
+        $deepThreaded = $this->getNewThreaded();
+        $deepThreaded2 = $this->getNewThreaded();
+        $user = $this->getNewUser();
+        $deepThreaded2->user()->associate($user)->save();
+        $deepThreaded->deepThreaded()->associate($deepThreaded2)->save();
+        $threaded->deepThreaded()->associate($deepThreaded)->save();
+
+        $user2 = $this->getNewUser();
+
+        $thread = Thread::factory()->create([
+            'threaded_id' => $threaded->id,
+            'threaded_type' => $threaded::class,
+            'user_id' => $user2->id,
+        ]);
+
+        $deepThreadedRelations = $thread->deepNestedRelation($threeDeep);
+
+        $this->assertEquals($threaded->deepThreaded->deepThreaded->user->id, $deepThreadedRelations->first()->id);
+    }
 }

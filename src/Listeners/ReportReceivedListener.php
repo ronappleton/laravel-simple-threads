@@ -7,17 +7,15 @@ namespace Appleton\Threads\Listeners;
 use Appleton\Threads\Events\ReportReceived;
 use Appleton\Threads\Notifications\ReportReceived as ReportReceivedNotification;
 
-readonly class ReportReceivedListener
+class ReportReceivedListener
 {
-    public function __construct(private ReportReceived $event)
+    public function handle(ReportReceived $event): void
     {
-    }
-
-    public function handle(): void
-    {
-        $reportedUser = $this->event->getReport()->user;
+        $reportedUser = $event->getReport()->comment
+            ? $event->getReport()->comment->user
+            : $event->getReport()->thread->user;
 
         /** @phpstan-ignore-next-line */
-        $reportedUser->notify(new ReportReceivedNotification($this->event->getReport()));
+        $reportedUser->notify(new ReportReceivedNotification($event->getReport()));
     }
 }

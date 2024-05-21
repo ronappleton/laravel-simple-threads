@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Controllers\Thread;
 
 use Appleton\Threads\Events\LikeReceived;
+use Appleton\Threads\Listeners\LikeReceivedListener;
 use Appleton\Threads\Models\Thread;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
@@ -23,6 +24,8 @@ class LikeTest extends TestCase
             'threaded_type' => $threaded::class,
             'user_id' => $user->id,
         ]);
+
+        Event::assertListening(LikeReceived::class, LikeReceivedListener::class);
 
         $response = $this->actingAs($user)->json('post', route('threads.like', [$thread->id]));
 

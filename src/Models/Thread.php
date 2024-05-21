@@ -97,4 +97,39 @@ class Thread extends Model
     {
         return $this->likes()->count();
     }
+
+    /**
+     * @param  array<int, string>  $relations
+     */
+    public function deepNestedRelation(array $relations, ?Model $relation = null): ?Model
+    {
+        $relation ??= $this;
+
+        if (empty($relations)) {
+            return $relation;
+        }
+
+        $relationName = array_shift($relations);
+
+        if (! method_exists($relation, $relationName)) {
+            return null;
+        }
+
+        return $this->deepNestedRelation($relations, $relation->$relationName);
+    }
+
+    /**
+     * @param  array<int, array<int, string>>  $relations
+     * @return Collection<int, Model>
+     */
+    public function deepNestedRelations(array $relations): Collection
+    {
+        $foundRelations = collect();
+
+        collect($relations)->each(function ($relation) use ($foundRelations) {
+            $foundRelations->push($this->deepNestedRelation($relation));
+        });
+
+        return $foundRelations;
+    }
 }

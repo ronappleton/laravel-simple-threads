@@ -7,17 +7,17 @@ namespace Appleton\Threads\Listeners;
 use Appleton\Threads\Events\ReportResolved;
 use Appleton\Threads\Notifications\ReportResolved as ReportResolvedNotification;
 
-readonly class ReportResolvedListener
+class ReportResolvedListener
 {
-    public function __construct(private ReportResolved $event)
+    public function handle(ReportResolved $event): void
     {
-    }
+        if (!config()->boolean('threads.listeners.report_resolved', false)) {
+            return;
+        }
 
-    public function handle(): void
-    {
-        $reportedUser = $this->event->getReport()->user;
+        $reportedUser = $event->getReport()->user;
 
         /** @phpstan-ignore-next-line */
-        $reportedUser->notify(new ReportResolvedNotification($this->event->getReport()));
+        $reportedUser->notify(new ReportResolvedNotification($event->getReport()));
     }
 }
