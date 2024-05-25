@@ -27,7 +27,7 @@ class CommentCreated extends Notification implements ShouldQueue
 
     public function __construct(Comment $comment)
     {
-        $this->url = route('thread.show', $comment->thread->id);
+        $this->url = $this->getThreadShowUrl($comment->thread->id);
 
         $this->user = $comment->user;
     }

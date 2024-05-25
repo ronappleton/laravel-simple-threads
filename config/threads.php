@@ -9,6 +9,10 @@ return [
     'user_name_field' => 'display_name',
     'user_avatar_field' => 'avatar',
     'thread_show_url' => 'http://localhost:8000/thread',
+    'report_url' => 'http://localhost:8000/report',
+    'moderator_emails' => [
+
+    ],
     'threaded_user_relations' => [
         [
             'fundraiser',
@@ -109,40 +113,20 @@ return [
             'name_field' => 'type',
             'sms' => [
                 'enabled' => false,
-                'message' => 'You have a received a :type report',
+                'message' => 'A :type report has been received',
             ],
             'database' => [
                 'enabled' => false,
-                'message' => 'You have a received a :type report',
+                'message' => 'A :type report has been received',
             ],
             'email' => [
                 'enabled' => false,
                 'subject' => 'New Report',
-                'message' => 'You have a received a :type report',
+                'message' => 'A :type report has been received',
             ],
             'push' => [
                 'enabled' => false,
-                'message' => 'You have a received a :type report',
-            ],
-        ],
-        'report_resolved' => [
-            'name_field' => 'type',
-            'sms' => [
-                'enabled' => false,
-                'message' => 'Your :type report has been resolved',
-            ],
-            'database' => [
-                'enabled' => false,
-                'message' => 'Your :type report has been resolved',
-            ],
-            'email' => [
-                'enabled' => false,
-                'subject' => 'Report Resolved',
-                'message' => 'Your :type report has been resolved',
-            ],
-            'push' => [
-                'enabled' => false,
-                'message' => 'Your :type report has been resolved',
+                'message' => 'A :type report has been received',
             ],
         ],
         'thread_created' => [

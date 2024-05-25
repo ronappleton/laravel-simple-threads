@@ -73,6 +73,8 @@ class BlockCommenterTest extends TestCase
 
     public function testBlockCommenterWithoutPermissionIsForbidden(): void
     {
+        Event::fake(CommenterBlocked::class);
+
         config()->set('threads.user_model', UserUuid::class);
 
         TestTime::freeze(Carbon::now());
@@ -92,6 +94,9 @@ class BlockCommenterTest extends TestCase
             'user_id' => $user->id,
             'content' => 'This is a comment',
         ]);
+
+        Event::assertListening(CommenterBlocked::class, CommenterBlockedListener::class);
+        Event::assertNotDispatched(CommenterBlocked::class);
 
         $response = $this->actingAs($adminUser)->json('post', route('threads.commenter.block', [$user->id]), [
             'reason' => 'This is a reason',
@@ -116,8 +121,10 @@ class BlockCommenterTest extends TestCase
         ]);
     }
 
-    public function testBlockCommenterUnathenticatedIsForbidden(): void
+    public function testBlockCommenterUnauthenticatedIsForbidden(): void
     {
+        Event::fake(CommenterBlocked::class);
+
         config()->set('threads.user_model', UserUuid::class);
 
         TestTime::freeze(Carbon::now());
@@ -135,6 +142,9 @@ class BlockCommenterTest extends TestCase
             'user_id' => $user->id,
             'content' => 'This is a comment',
         ]);
+
+        Event::assertListening(CommenterBlocked::class, CommenterBlockedListener::class);
+        Event::assertNotDispatched(CommenterBlocked::class);
 
         $response = $this->json('post', route('threads.commenter.block', [$user->id]), [
             'reason' => 'This is a reason',

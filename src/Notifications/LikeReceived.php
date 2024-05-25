@@ -27,7 +27,7 @@ class LikeReceived extends Notification implements ShouldQueue
 
     public function __construct(private readonly ThreadLike $like)
     {
-        $this->url = route('thread.show', $this->like->thread->id);
+        $this->url = $this->getThreadShowUrl($like->thread->id);
 
         $this->user = $this->like->user;
     }

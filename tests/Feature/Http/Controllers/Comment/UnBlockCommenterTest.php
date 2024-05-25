@@ -84,6 +84,8 @@ class UnBlockCommenterTest extends TestCase
 
     public function testBlockCommenterWithoutPermissionIsForbidden(): void
     {
+        Event::fake(CommenterUnblocked::class);
+
         $threaded = $this->getNewThreaded();
         $user = $this->getNewUser();
 
@@ -102,6 +104,9 @@ class UnBlockCommenterTest extends TestCase
             'content' => 'This is a comment',
             'hidden_at' => Carbon::now(),
         ]);
+
+        Event::assertListening(CommenterUnblocked::class, CommenterUnblockedListener::class);
+        Event::assertNotDispatched(CommenterUnblocked::class);
 
         $response = $this->actingAs($adminUser)->json('post', route('threads.commenter.unblock', [$user->id]), [
             'unblock_reason' => 'This is the reason',
@@ -127,6 +132,8 @@ class UnBlockCommenterTest extends TestCase
 
     public function testBlockCommenterWhenUnauthenticatedIsForbidden(): void
     {
+        Event::fake(CommenterUnblocked::class);
+
         $threaded = $this->getNewThreaded();
         $user = $this->getNewUser();
 
@@ -144,6 +151,9 @@ class UnBlockCommenterTest extends TestCase
             'hidden_at' => Carbon::now(),
         ]);
 
+        Event::assertListening(CommenterUnblocked::class, CommenterUnblockedListener::class);
+        Event::assertNotDispatched(CommenterUnblocked::class);
+
         $response = $this->json('post', route('threads.commenter.unblock', [$user->id]), [
             'unblock_reason' => 'This is the reason',
         ]);
@@ -157,17 +167,19 @@ class UnBlockCommenterTest extends TestCase
 
         $this->assertDatabaseHas('threads', [
             'id' => $thread->id,
-            'hidden_at' => Carbon::now(),
+            'hidden_at' => Carbon::now()->toDateTimeString(),
         ]);
 
         $this->assertDatabaseHas('comments', [
             'id' => $comment->id,
-            'hidden_at' => Carbon::now(),
+            'hidden_at' => Carbon::now()->toDateTimeString(),
         ]);
     }
 
     public function testUnBlockCommenterWhenTryingToUnblockOwnUserIsForbidden(): void
     {
+        Event::fake(CommenterUnblocked::class);
+
         config()->set('threads.user_model', UserUuid::class);
 
         $threaded = $this->getNewThreaded();
@@ -195,6 +207,9 @@ class UnBlockCommenterTest extends TestCase
             'blocked_user_id' => $adminUser->id,
         ]);
 
+        Event::assertListening(CommenterUnblocked::class, CommenterUnblockedListener::class);
+        Event::assertNotDispatched(CommenterUnblocked::class);
+
         $response = $this->actingAs($adminUser)->json('post', route('threads.commenter.unblock', [$adminUser->id]), [
             'unblock_reason' => 'This is the reason',
         ]);
@@ -208,12 +223,12 @@ class UnBlockCommenterTest extends TestCase
 
         $this->assertDatabaseHas('threads', [
             'id' => $thread->id,
-            'hidden_at' => Carbon::now(),
+            'hidden_at' => Carbon::now()->toDateTimeString(),
         ]);
 
         $this->assertDatabaseHas('comments', [
             'id' => $comment->id,
-            'hidden_at' => Carbon::now(),
+            'hidden_at' => Carbon::now()->toDateTimeString(),
         ]);
     }
 }

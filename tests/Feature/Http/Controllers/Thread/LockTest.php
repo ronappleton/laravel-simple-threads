@@ -6,6 +6,7 @@ namespace Tests\Feature\Http\Controllers\Thread;
 
 use Appleton\SpatieLaravelPermissionMock\Models\PermissionUuid;
 use Appleton\Threads\Events\ThreadLocked;
+use Appleton\Threads\Listeners\ThreadLockedListener;
 use Appleton\Threads\Models\Thread;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Event;
@@ -51,6 +52,8 @@ class LockTest extends TestCase
 
     public function testLockThreadWhenUserIsOwnerIsAccepted(): void
     {
+        Event::fake(ThreadLocked::class);
+
         TestTime::freeze(Carbon::now());
 
         $threaded = $this->getNewThreaded();
@@ -62,6 +65,8 @@ class LockTest extends TestCase
             'user_id' => $user->id,
         ]);
 
+        Event::assertListening(ThreadLocked::class, ThreadLockedListener::class);
+
         $response = $this->actingAs($user)->json('post', route('threads.lock', [$thread->id]));
 
         $response->assertAccepted();
@@ -70,6 +75,10 @@ class LockTest extends TestCase
             'id' => $thread->id,
             'locked_at' => Carbon::now(),
         ]);
+
+        Event::assertDispatched(ThreadLocked::class, function ($event) use ($thread) {
+            return $event->getThread()->id === $thread->id;
+        });
     }
 
     public function testLockThreadWhenUserIsNotOwnerIsForbidden(): void

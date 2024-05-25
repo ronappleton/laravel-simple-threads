@@ -8,29 +8,26 @@ use Illuminate\Support\Str;
 
 trait HasConfig
 {
-    public function getSnakeName(): string
-    {
-        return Str::snake(static::class);
-    }
+    use HasClass;
 
     public function smsEnabled(): bool
     {
-        return config()->boolean("threads.notifications.{$this->getSnakeName()}.sms_enabled", false);
+        return config()->boolean("threads.notifications.{$this->getSnakeName(static::class)}.sms_enabled", false);
     }
 
     public function databaseEnabled(): bool
     {
-        return config()->boolean("threads.notifications.{$this->getSnakeName()}.database_enabled", false);
+        return config()->boolean("threads.notifications.{$this->getSnakeName(static::class)}.database_enabled", false);
     }
 
     public function emailEnabled(): bool
     {
-        return config()->boolean("threads.notifications.{$this->getSnakeName()}.email_enabled", false);
+        return config()->boolean("threads.notifications.{$this->getSnakeName(static::class)}.email_enabled", false);
     }
 
     public function pushEnabled(): bool
     {
-        return config()->boolean("threads.notifications.{$this->getSnakeName()}.push_enabled", false);
+        return config()->boolean("threads.notifications.{$this->getSnakeName(static::class)}.push_enabled", false);
     }
 
     /**
@@ -43,7 +40,7 @@ trait HasConfig
         $channels = [];
 
         if ($this->smsEnabled()) {
-            $channels[] = 'database';
+            $channels[] = 'sms';
         }
 
         if ($this->databaseEnabled()) {
@@ -64,17 +61,22 @@ trait HasConfig
     public function getEmailSubject(): string
     {
         return config()
-            ->string("threads.notifications.{$this->getSnakeName()}.email_subject", 'System Notification');
+            ->string("threads.notifications.{$this->getSnakeName(static::class)}.email_subject", 'System Notification');
     }
 
     public function getNameField(): ?string
     {
         return config()
-            ->string("threads.notifications.{$this->getSnakeName()}.name_field");
+            ->string("threads.notifications.{$this->getSnakeName(static::class)}.name_field");
     }
 
     public function getThreadShowUrl(string $threadId): string
     {
         return sprintf('%s?thread=%s', config()->string('threads.thread_show_url'), $threadId);
+    }
+
+    public function getReportUrl(string $reportId): string
+    {
+        return sprintf('%s?report=%s', config()->string('threads.report_url'), $reportId);
     }
 }

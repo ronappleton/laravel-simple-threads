@@ -24,9 +24,11 @@ class ReportReceived extends Notification implements ShouldQueue
 
     public function __construct(private readonly ThreadReport $report)
     {
-        $threadId = $report->comment_id ? $report->comment->thread_id : $report->thread_id;
+        $threadId = $report->comment_id
+            ? $report->comment->thread_id
+            : $report->thread_id;
 
-        $this->url = $this->getThreadShowUrl($threadId);
+        $this->url = $this->getReportUrl($threadId);
     }
 
     /**
@@ -54,8 +56,6 @@ class ReportReceived extends Notification implements ShouldQueue
         return [
             'message' => $this->getMessage('database', $this->getNameField(), $this->getType()),
             'url' => $this->url,
-            'user_name' => $this->getUserName(),
-            'avatar' => $this->getUserAvatar(),
         ];
     }
 
@@ -67,8 +67,6 @@ class ReportReceived extends Notification implements ShouldQueue
         return new BroadcastMessage([
             'message' => $this->getMessage('push', $this->getNameField(), $this->getType()),
             'url' => $this->url,
-            'user_name' => $this->getUserName(),
-            'avatar' => $this->getUserAvatar(),
         ]);
     }
 
@@ -80,7 +78,7 @@ class ReportReceived extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject($this->getEmailSubject())
             ->line($this->getMessage('email', $this->getNameField(), $this->getType()))
-            ->action('View Thread', $this->url);
+            ->action('View Report', $this->url);
     }
 
     /**
@@ -93,8 +91,6 @@ class ReportReceived extends Notification implements ShouldQueue
         return [
             'message' => $this->getMessage('database', $this->getNameField(), $this->getType()),
             'url' => $this->url,
-            'user_name' => $this->getUserName(),
-            'avatar' => $this->getUserAvatar(),
         ];
     }
 

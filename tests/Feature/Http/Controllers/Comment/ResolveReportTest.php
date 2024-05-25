@@ -19,8 +19,6 @@ class ResolveReportTest extends TestCase
 {
     public function testResolveCommentReportWithPermissionIsAccepted(): void
     {
-        Event::fake(ReportResolved::class);
-
         TestTime::freeze(Carbon::now());
 
         $threaded = $this->getNewThreaded();
@@ -48,8 +46,6 @@ class ResolveReportTest extends TestCase
             'reason' => 'This is a reason',
         ]);
 
-        Event::assertListening(ReportResolved::class, ReportResolvedListener::class);
-
         $response = $this->actingAs($adminUser)->json('post', route('threads.report.resolve', [$threadReport->id]));
 
         $response->assertAccepted();
@@ -61,10 +57,6 @@ class ResolveReportTest extends TestCase
             'resolved_at' => Carbon::now(),
             'deleted_at' => Carbon::now(),
         ]);
-
-        Event::assertDispatched(ReportResolved::class, function ($event) use ($comment) {
-            return $event->getReport()->comment->id === $comment->id;
-        });
     }
 
     public function testResolveThreadReportWhenUnauthenticatedIsForbidden(): void

@@ -6,39 +6,21 @@ namespace Appleton\Threads\Notifications\Concerns;
 
 trait HasUser
 {
+    use HasClass;
+
     public function getUserName(): string
     {
-        if (is_null($this->user)) {
-            return 'System Robot';
-        }
-
-        if (property_exists($this->user, $this->getUserNameField())) {
-            $field = $this->getUserNameField();
-
-            return $this->user->$field;
-        }
-
-        return 'System Robot';
+        return $this->user->{$this->getUserNameField()} ?? 'System Robot';
     }
 
     public function getUserAvatar(): string
     {
-        if (is_null($this->user)) {
-            return 'System Robot';
-        }
-
-        if (property_exists($this->user, $this->getUserAvatarField())) {
-            $field = $this->getUserAvatarField();
-
-            return $this->user->$field;
-        }
-
-        return 'System Robot';
+        return $this->user->{$this->getUserAvatarField()} ?? 'System Robot';
     }
 
     public function getMessage(string $channel, ?string $nameField = null, ?string $replaceOverride = null): string
     {
-        $message = config()->string("threads.notifications.$channel.message", '');
+        $message = config()->string(sprintf('threads.notifications.%s.%s.message', $this->getSnakeName(static::class), $channel));
 
         if (is_null($nameField)) {
             return $message;

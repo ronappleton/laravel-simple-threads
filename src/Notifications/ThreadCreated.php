@@ -27,7 +27,7 @@ class ThreadCreated extends Notification implements ShouldQueue
 
     public function __construct(Thread $thread)
     {
-        $this->url = route('thread.show', $thread->id);
+        $this->url = $this->getThreadShowUrl($thread->id);
 
         $this->user = $thread->user;
     }

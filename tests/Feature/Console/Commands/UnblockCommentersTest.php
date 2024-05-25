@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Tests\Feature\Console\Commands;
 
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
+use Appleton\Threads\Events\CommenterUnblocked;
 use Appleton\Threads\Models\BlockedCommenter;
 use Carbon\Carbon;
+use Event;
 use Spatie\TestTime\TestTime;
 use Tests\TestCase;
 
@@ -21,6 +23,8 @@ class UnblockCommentersTest extends TestCase
 
     public function testUnblocksCommenters(): void
     {
+        Event::fake(CommenterUnblocked::class);
+
         config()->set('threads.user_model', UserUuid::class);
 
         TestTime::freeze(Carbon::now());

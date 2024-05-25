@@ -9,7 +9,6 @@ use Appleton\Threads\Events\CommenterBlocked;
 use Appleton\Threads\Events\CommenterUnblocked;
 use Appleton\Threads\Events\LikeReceived;
 use Appleton\Threads\Events\ReportReceived;
-use Appleton\Threads\Events\ReportResolved;
 use Appleton\Threads\Events\ThreadCreated;
 use Appleton\Threads\Events\ThreadLocked;
 use Appleton\Threads\Events\ThreadUnlocked;
@@ -18,7 +17,6 @@ use Appleton\Threads\Listeners\CommenterBlockedListener;
 use Appleton\Threads\Listeners\CommenterUnblockedListener;
 use Appleton\Threads\Listeners\LikeReceivedListener;
 use Appleton\Threads\Listeners\ReportReceivedListener;
-use Appleton\Threads\Listeners\ReportResolvedListener;
 use Appleton\Threads\Listeners\ThreadCreatedListener;
 use Appleton\Threads\Listeners\ThreadLockedListener;
 use Appleton\Threads\Listeners\ThreadUnlockedListener;
@@ -48,9 +46,6 @@ class EventServiceProvider extends ServiceProvider
         ReportReceived::class => [
             ReportReceivedListener::class,
         ],
-        ReportResolved::class => [
-            ReportResolvedListener::class,
-        ],
         ThreadCreated::class => [
             ThreadCreatedListener::class,
         ],
@@ -61,9 +56,4 @@ class EventServiceProvider extends ServiceProvider
             ThreadUnlockedListener::class,
         ],
     ];
-
-    public function boot(): void
-    {
-        parent::boot();
-    }
 }

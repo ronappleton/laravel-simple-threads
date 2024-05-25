@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Appleton\Threads\Services;
 
 use Appleton\Threads\Events\ReportReceived;
-use Appleton\Threads\Events\ReportResolved;
 use Appleton\Threads\Http\Requests\CreateThreadReportRequest;
 use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
@@ -40,7 +39,5 @@ trait ManagesReports
     {
         $threadReport->update(['resolved_at' => Carbon::now()]);
         $threadReport->delete();
-
-        event(new ReportResolved($threadReport));
     }
 }

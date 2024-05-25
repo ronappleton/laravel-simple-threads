@@ -27,7 +27,7 @@ class ThreadLocked extends Notification implements ShouldQueue
 
     public function __construct(Thread $thread)
     {
-        $this->url = route('thread.show', $thread->id);
+        $this->url = $this->getThreadShowUrl($thread->id);
 
         $this->user = $thread->user;
     }
@@ -38,7 +38,7 @@ class ThreadLocked extends Notification implements ShouldQueue
     public function toVonage(object $notifiable): VonageMessage
     {
         return (new VonageMessage)
-            ->content(sprintf('%s - %s', $this->getMessage('sms', $this->getNameField()), $this->url));
+            ->content(sprintf('%s - %s', $this->getMessage('sms'), $this->url));
     }
 
     /**
@@ -49,10 +49,8 @@ class ThreadLocked extends Notification implements ShouldQueue
     public function toDatabase(object $notifiable): array
     {
         return [
-            'message' => $this->getMessage('database', $this->getNameField()),
+            'message' => $this->getMessage('database'),
             'url' => $this->url,
-            'user_name' => $this->getUserName(),
-            'avatar' => $this->getUserAvatar(),
         ];
     }
 
@@ -62,10 +60,8 @@ class ThreadLocked extends Notification implements ShouldQueue
     public function toBroadcast(object $notifiable): BroadcastMessage
     {
         return new BroadcastMessage([
-            'message' => $this->getMessage('push', $this->getNameField()),
+            'message' => $this->getMessage('push'),
             'url' => $this->url,
-            'user_name' => $this->getUserName(),
-            'avatar' => $this->getUserAvatar(),
         ]);
     }
 
@@ -76,7 +72,7 @@ class ThreadLocked extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject($this->getEmailSubject())
-            ->line($this->getMessage('email', $this->getNameField()))
+            ->line($this->getMessage('email'))
             ->action('View Thread', $this->url);
     }
 
@@ -88,10 +84,8 @@ class ThreadLocked extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => $this->getMessage('database', $this->getNameField()),
+            'message' => $this->getMessage('database'),
             'url' => $this->url,
-            'user_name' => $this->getUserName(),
-            'avatar' => $this->getUserAvatar(),
         ];
     }
 }

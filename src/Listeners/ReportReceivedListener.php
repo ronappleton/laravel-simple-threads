@@ -6,14 +6,22 @@ namespace Appleton\Threads\Listeners;
 
 use Appleton\Threads\Events\ReportReceived;
 use Appleton\Threads\Notifications\ReportReceived as ReportReceivedNotification;
+use Illuminate\Database\Eloquent\Model;
 
 class ReportReceivedListener
 {
     public function handle(ReportReceived $event): void
     {
-        $reportedUser = $event->getReport()->comment
-            ? $event->getReport()->comment->user
-            : $event->getReport()->thread->user;
+        $moderatorEmails = config('threads.moderator_emails');
+
+        /** @var Model $userModel */
+        $userModel = config('threads.user_model');
+
+        $users = $userModel::query()->whereIn('email', $moderatorEmails)->get();
+
+        $users->each(function ($user) use ($event) {
+            $user->notify(new ReportReceivedNotification($event->getReport()));
+        });
 
         /** @phpstan-ignore-next-line */
         $reportedUser->notify(new ReportReceivedNotification($event->getReport()));

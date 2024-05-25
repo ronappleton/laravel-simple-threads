@@ -6,6 +6,7 @@ namespace Tests\Feature\Http\Controllers\Thread;
 
 use Appleton\SpatieLaravelPermissionMock\Models\PermissionUuid;
 use Appleton\Threads\Events\ThreadUnlocked;
+use Appleton\Threads\Listeners\ThreadUnlockedListener;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Models\ThreadReport;
 use Carbon\Carbon;
@@ -33,6 +34,8 @@ class UnLockTest extends TestCase
             'locked_at' => Carbon::now(),
         ]);
 
+        Event::assertListening(ThreadUnlocked::class, ThreadUnlockedListener::class);
+
         $response = $this->actingAs($adminUser)->json('post', route('threads.lock', [$thread->id]));
 
         $response->assertAccepted();
@@ -49,6 +52,8 @@ class UnLockTest extends TestCase
 
     public function testUnlockThreadIfUserIsOwnerAndReportExistsIsForbidden(): void
     {
+        Event::fake(ThreadUnlocked::class);
+
         TestTime::freeze(Carbon::now());
 
         $threaded = $this->getNewThreaded();
@@ -70,6 +75,8 @@ class UnLockTest extends TestCase
             'thread_id' => $thread->id,
         ]);
 
+        Event::assertListening(ThreadUnlocked::class, ThreadUnlockedListener::class);
+
         $response = $this->actingAs($user)->json('post', route('threads.lock', [$thread->id]));
 
         $response->assertForbidden();
@@ -78,10 +85,14 @@ class UnLockTest extends TestCase
             'id' => $thread->id,
             'locked_at' => Carbon::now(),
         ]);
+
+        Event::assertNotDispatched(ThreadUnlocked::class);
     }
 
     public function testUnlockWhenUserIsOwnerAccepted(): void
     {
+        Event::fake(ThreadUnlocked::class);
+
         TestTime::freeze(Carbon::now());
 
         $threaded = $this->getNewThreaded();
@@ -94,6 +105,8 @@ class UnLockTest extends TestCase
             'locked_at' => Carbon::now(),
         ]);
 
+        Event::assertListening(ThreadUnlocked::class, ThreadUnlockedListener::class);
+
         $response = $this->actingAs($user)->json('post', route('threads.lock', [$thread->id]));
 
         $response->assertAccepted();
@@ -102,10 +115,16 @@ class UnLockTest extends TestCase
             'id' => $thread->id,
             'locked_at' => null,
         ]);
+
+        Event::assertDispatched(ThreadUnlocked::class, function ($event) use ($thread) {
+            return $event->getThread()->id === $thread->id;
+        });
     }
 
     public function testUnlockIfUserIsNotOwnerIsForbidden(): void
     {
+        Event::fake(ThreadUnlocked::class);
+
         TestTime::freeze(Carbon::now());
 
         $threaded = $this->getNewThreaded();
@@ -119,6 +138,8 @@ class UnLockTest extends TestCase
             'locked_at' => Carbon::now(),
         ]);
 
+        Event::assertListening(ThreadUnlocked::class, ThreadUnlockedListener::class);
+
         $response = $this->actingAs($otherUser)->json('post', route('threads.lock', [$thread->id]));
 
         $response->assertForbidden();
@@ -127,5 +148,7 @@ class UnLockTest extends TestCase
             'id' => $thread->id,
             'locked_at' => Carbon::now(),
         ]);
+
+        Event::assertNotDispatched(ThreadUnlocked::class);
     }
 }
