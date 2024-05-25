@@ -12,22 +12,22 @@ trait HasConfig
 
     public function smsEnabled(): bool
     {
-        return config()->boolean("threads.notifications.{$this->getSnakeName(static::class)}.sms_enabled", false);
+        return config()->boolean("threads.notifications.{$this->getSnakeName(static::class)}.sms.enabled", false);
     }
 
     public function databaseEnabled(): bool
     {
-        return config()->boolean("threads.notifications.{$this->getSnakeName(static::class)}.database_enabled", false);
+        return config()->boolean("threads.notifications.{$this->getSnakeName(static::class)}.database.enabled", false);
     }
 
     public function emailEnabled(): bool
     {
-        return config()->boolean("threads.notifications.{$this->getSnakeName(static::class)}.email_enabled", false);
+        return config()->boolean("threads.notifications.{$this->getSnakeName(static::class)}.email.enabled", false);
     }
 
     public function pushEnabled(): bool
     {
-        return config()->boolean("threads.notifications.{$this->getSnakeName(static::class)}.push_enabled", false);
+        return config()->boolean("threads.notifications.{$this->getSnakeName(static::class)}.push.enabled", false);
     }
 
     /**
@@ -61,7 +61,7 @@ trait HasConfig
     public function getEmailSubject(): string
     {
         return config()
-            ->string("threads.notifications.{$this->getSnakeName(static::class)}.email_subject", 'System Notification');
+            ->string("threads.notifications.{$this->getSnakeName(static::class)}.email.subject", 'System Notification');
     }
 
     public function getNameField(): ?string

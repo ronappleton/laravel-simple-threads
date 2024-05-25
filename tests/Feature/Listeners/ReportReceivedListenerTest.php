@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Tests\Feature\Listeners;
 
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
-use Appleton\Threads\Events\CommentCreated;
-use Appleton\Threads\Models\Comment;
+use Appleton\Threads\Events\ReportReceived;
 use Appleton\Threads\Models\Thread;
-use Appleton\Threads\Notifications\CommentCreated as CommentCreatedNotification;
+use Appleton\Threads\Models\ThreadReport;
+use Appleton\Threads\Notifications\ReportReceived as ReportReceivedNotification;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
+use function Psy\debug;
 
-class CommentCreatedListenerTest extends TestCase
+class ReportReceivedListenerTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -29,16 +29,15 @@ class CommentCreatedListenerTest extends TestCase
 
     public function testHandleSendsNotificationWhenConfigIsTrue(): void
     {
-        Config::set('threads.listeners.comment_created', true);
-        Config::set('threads.notifications.comment_created.sms.enabled', true);
-        Config::set('threads.notifications.comment_created.database.enabled', true);
-        Config::set('threads.notifications.comment_created.email.enabled', true);
-        Config::set('threads.notifications.comment_created.push.enabled', true);
-        Config::set('threads.threaded_user_relations', [
-            [
-                'threaded',
-                'user',
-            ],
+        Config::set('threads.listeners.report_received', true);
+        Config::set('threads.notifications.report_received.sms.enabled', true);
+        Config::set('threads.notifications.report_received.database.enabled', true);
+        Config::set('threads.notifications.report_received.email.enabled', true);
+        Config::set('threads.notifications.report_received.push.enabled', true);
+
+        $adminUser = $this->getNewUser();
+        Config::set('threads.moderator_emails', [
+            $adminUser->email,
         ]);
 
         $user = $this->getNewUser();
@@ -54,21 +53,30 @@ class CommentCreatedListenerTest extends TestCase
             'content' => 'This is a comment',
         ]);
 
-        $comment = Comment::factory()->create([
-            'user_id' => $user->id,
+        $threadReport = ThreadReport::factory()->create([
             'thread_id' => $thread->id,
+            'user_id' => $user->id,
         ]);
 
         Notification::fake();
 
-        event(new CommentCreated($comment));
+        event(new ReportReceived($threadReport));
 
-        Notification::assertSentTo($comment->thread->threaded->user, CommentCreatedNotification::class,);
+        try {
+            Notification::assertSentTo($adminUser, ReportReceivedNotification::class);
+        } catch (\Throwable $e) {
+            dd($e->getMessage(), debug_backtrace());
+        }
     }
 
     public function testHandleDoesNotSendNotificationWhenConfigIsFalse(): void
     {
-        Config::set('threads.listeners.comment_created', false);
+        Config::set('threads.listeners.report_received', false);
+
+        $adminUser = $this->getNewUser();
+        Config::set('threads.moderator_emails', [
+            $adminUser->email,
+        ]);
 
         $user = $this->getNewUser();
         $threaded = $this->getNewThreaded();
@@ -80,14 +88,14 @@ class CommentCreatedListenerTest extends TestCase
             'content' => 'This is a comment',
         ]);
 
-        $comment = Comment::factory()->create([
-            'user_id' => $user->id,
+        $threadReport = ThreadReport::factory()->create([
             'thread_id' => $thread->id,
+            'user_id' => $user->id,
         ]);
 
         Notification::fake();
 
-        event(new CommentCreated($comment));
+        event(new ReportReceived($threadReport));
 
         Notification::assertNothingSent();
     }

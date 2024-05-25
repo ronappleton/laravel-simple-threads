@@ -96,7 +96,7 @@ class LikeReceivedTest extends TestCase
         $data = $message->toArray();
 
         $this->assertSame('info', $data['level']);
-        $this->assertSame('System Notification', $data['subject']);
+        $this->assertSame('New Like', $data['subject']);
         $this->assertSame('You have a new like from Test User', $data['introLines'][0]);
         $this->assertSame('View Thread', $data['actionText']);
         $this->assertSame('http://localhost/thread?thread=some_string', $data['actionUrl']);

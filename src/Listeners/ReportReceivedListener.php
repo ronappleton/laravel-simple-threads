@@ -22,8 +22,5 @@ class ReportReceivedListener
         $users->each(function ($user) use ($event) {
             $user->notify(new ReportReceivedNotification($event->getReport()));
         });
-
-        /** @phpstan-ignore-next-line */
-        $reportedUser->notify(new ReportReceivedNotification($event->getReport()));
     }
 }

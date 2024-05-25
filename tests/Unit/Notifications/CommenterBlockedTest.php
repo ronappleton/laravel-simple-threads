@@ -93,7 +93,7 @@ class CommenterBlockedTest extends TestCase
         $data = $message->toArray();
 
         $this->assertSame('info', $data['level']);
-        $this->assertSame('System Notification', $data['subject'], );
+        $this->assertSame('You have been blocked from starting threads and commenting', $data['subject'], );
         $this->assertSame('You have been blocked by Test Blocker', $data['introLines'][0]);
     }
 

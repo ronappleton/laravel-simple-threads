@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace Tests\Feature\Listeners;
 
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
-use Appleton\Threads\Events\CommentCreated;
-use Appleton\Threads\Models\Comment;
+use Appleton\Threads\Events\LikeReceived;
 use Appleton\Threads\Models\Thread;
-use Appleton\Threads\Notifications\CommentCreated as CommentCreatedNotification;
+use Appleton\Threads\Models\ThreadLike;
+use Appleton\Threads\Notifications\LikeReceived as LikeReceivedNotification;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
-class CommentCreatedListenerTest extends TestCase
+class LikeReceivedListenerTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -29,11 +28,11 @@ class CommentCreatedListenerTest extends TestCase
 
     public function testHandleSendsNotificationWhenConfigIsTrue(): void
     {
-        Config::set('threads.listeners.comment_created', true);
-        Config::set('threads.notifications.comment_created.sms.enabled', true);
-        Config::set('threads.notifications.comment_created.database.enabled', true);
-        Config::set('threads.notifications.comment_created.email.enabled', true);
-        Config::set('threads.notifications.comment_created.push.enabled', true);
+        Config::set('threads.listeners.like_received', true);
+        Config::set('threads.notifications.like_received.sms.enabled', true);
+        Config::set('threads.notifications.like_received.database.enabled', true);
+        Config::set('threads.notifications.like_received.email.enabled', true);
+        Config::set('threads.notifications.like_received.push.enabled', true);
         Config::set('threads.threaded_user_relations', [
             [
                 'threaded',
@@ -54,21 +53,21 @@ class CommentCreatedListenerTest extends TestCase
             'content' => 'This is a comment',
         ]);
 
-        $comment = Comment::factory()->create([
-            'user_id' => $user->id,
+        $threadLike = ThreadLike::create([
             'thread_id' => $thread->id,
+            'user_id' => $user->id,
         ]);
 
         Notification::fake();
 
-        event(new CommentCreated($comment));
+        event(new LikeReceived($threadLike));
 
-        Notification::assertSentTo($comment->thread->threaded->user, CommentCreatedNotification::class,);
+        Notification::assertSentTo($thread->threaded->user, LikeReceivedNotification::class,);
     }
 
     public function testHandleDoesNotSendNotificationWhenConfigIsFalse(): void
     {
-        Config::set('threads.listeners.comment_created', false);
+        Config::set('threads.listeners.like_received', false);
 
         $user = $this->getNewUser();
         $threaded = $this->getNewThreaded();
@@ -80,14 +79,14 @@ class CommentCreatedListenerTest extends TestCase
             'content' => 'This is a comment',
         ]);
 
-        $comment = Comment::factory()->create([
-            'user_id' => $user->id,
+        $threadLike = ThreadLike::create([
             'thread_id' => $thread->id,
+            'user_id' => $user->id,
         ]);
 
         Notification::fake();
 
-        event(new CommentCreated($comment));
+        event(new LikeReceived($threadLike));
 
         Notification::assertNothingSent();
     }

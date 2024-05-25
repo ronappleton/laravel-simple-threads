@@ -124,4 +124,30 @@ class ThreadTest extends TestCase
 
         $this->assertEquals($threaded->deepThreaded->deepThreaded->user->id, $deepThreadedRelations->first()->id);
     }
+
+    public function testDeepNestedRelationReturnsNullIfRelationDoesNotExist(): void
+    {
+        $twoDeep = [
+            'deepThreaded',
+            'user',
+        ];
+
+        $threaded = $this->getNewThreaded();
+        $deepThreaded = $this->getNewThreaded();
+        $user = $this->getNewUser();
+        $deepThreaded->user()->associate($user)->save();
+        $threaded->deepThreaded()->associate($deepThreaded)->save();
+
+        $user2 = $this->getNewUser();
+
+        $thread = Thread::factory()->create([
+            'threaded_id' => $threaded->id,
+            'threaded_type' => $threaded::class,
+            'user_id' => $user2->id,
+        ]);
+
+        $deepThreadedRelation = $thread->deepNestedRelation($twoDeep);
+
+        $this->assertNull($deepThreadedRelation);
+    }
 }

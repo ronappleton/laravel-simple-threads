@@ -124,7 +124,7 @@ class ReportReceivedTest extends TestCase
         $data = $message->toArray();
 
         $this->assertSame('info', $data['level']);
-        $this->assertSame('System Notification', $data['subject']);
+        $this->assertSame('New Report', $data['subject']);
         $this->assertSame('A comment report has been received', $data['introLines'][0]);
         $this->assertSame('View Report', $data['actionText']);
         $this->assertSame('http://localhost/report?report=some_string', $data['actionUrl']);

@@ -19,41 +19,41 @@ class HasConfigTest extends TestCase
 
     public function testSmsEnabledReturnsConfigValue(): void
     {
-        Config::set('threads.notifications.has_config_test.sms_enabled', true);
+        Config::set('threads.notifications.has_config_test.sms.enabled', true);
         $this->assertTrue($this->smsEnabled());
     }
 
     public function testDatabaseEnabledReturnsConfigValue(): void
     {
-        Config::set('threads.notifications.has_config_test.database_enabled', true);
+        Config::set('threads.notifications.has_config_test.database.enabled', true);
         $this->assertTrue($this->databaseEnabled());
     }
 
     public function testEmailEnabledReturnsConfigValue(): void
     {
-        Config::set('threads.notifications.has_config_test.email_enabled', true);
+        Config::set('threads.notifications.has_config_test.email.enabled', true);
         $this->assertTrue($this->emailEnabled());
     }
 
     public function testPushEnabledReturnsConfigValue(): void
     {
-        Config::set('threads.notifications.has_config_test.push_enabled', true);
+        Config::set('threads.notifications.has_config_test.push.enabled', true);
         $this->assertTrue($this->pushEnabled());
     }
 
     public function testViaReturnsCorrectChannels(): void
     {
-        Config::set('threads.notifications.has_config_test.sms_enabled', true);
-        Config::set('threads.notifications.has_config_test.database_enabled', true);
-        Config::set('threads.notifications.has_config_test.email_enabled', true);
-        Config::set('threads.notifications.has_config_test.push_enabled', true);
+        Config::set('threads.notifications.has_config_test.sms.enabled', true);
+        Config::set('threads.notifications.has_config_test.database.enabled', true);
+        Config::set('threads.notifications.has_config_test.email.enabled', true);
+        Config::set('threads.notifications.has_config_test.push.enabled', true);
 
         $this->assertEquals(['sms', 'database', 'mail', 'broadcast'], $this->via(new \stdClass()));
     }
 
     public function testEmailSubjectReturnsConfigValue(): void
     {
-        Config::set('threads.notifications.has_config_test.email_subject', 'Test Subject');
+        Config::set('threads.notifications.has_config_test.email.subject', 'Test Subject');
         $this->assertEquals('Test Subject', $this->getEmailSubject());
     }
 

@@ -96,7 +96,7 @@ class CommentCreatedTest extends TestCase
         $data = $message->toArray();
 
         $this->assertSame('info', $data['level']);
-        $this->assertSame('System Notification', $data['subject']);
+        $this->assertSame('New Comment', $data['subject']);
         $this->assertSame('You have a new comment from Test User', $data['introLines'][0]);
         $this->assertSame('View Thread', $data['actionText']);
         $this->assertSame('http://localhost/thread?thread=some_string', $data['actionUrl']);

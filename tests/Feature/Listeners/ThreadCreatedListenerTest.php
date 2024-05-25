@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace Tests\Feature\Listeners;
 
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
-use Appleton\Threads\Events\CommentCreated;
-use Appleton\Threads\Models\Comment;
+use Appleton\Threads\Events\ThreadCreated;
 use Appleton\Threads\Models\Thread;
-use Appleton\Threads\Notifications\CommentCreated as CommentCreatedNotification;
+use Appleton\Threads\Notifications\ThreadCreated as ThreadCreatedNotification;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
-class CommentCreatedListenerTest extends TestCase
+class ThreadCreatedListenerTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -29,11 +27,11 @@ class CommentCreatedListenerTest extends TestCase
 
     public function testHandleSendsNotificationWhenConfigIsTrue(): void
     {
-        Config::set('threads.listeners.comment_created', true);
-        Config::set('threads.notifications.comment_created.sms.enabled', true);
-        Config::set('threads.notifications.comment_created.database.enabled', true);
-        Config::set('threads.notifications.comment_created.email.enabled', true);
-        Config::set('threads.notifications.comment_created.push.enabled', true);
+        Config::set('threads.listeners.thread_created', true);
+        Config::set('threads.notifications.thread_created.sms.enabled', true);
+        Config::set('threads.notifications.thread_created.database.enabled', true);
+        Config::set('threads.notifications.thread_created.email.enabled', true);
+        Config::set('threads.notifications.thread_created.push.enabled', true);
         Config::set('threads.threaded_user_relations', [
             [
                 'threaded',
@@ -54,21 +52,16 @@ class CommentCreatedListenerTest extends TestCase
             'content' => 'This is a comment',
         ]);
 
-        $comment = Comment::factory()->create([
-            'user_id' => $user->id,
-            'thread_id' => $thread->id,
-        ]);
-
         Notification::fake();
 
-        event(new CommentCreated($comment));
+        event(new ThreadCreated($thread));
 
-        Notification::assertSentTo($comment->thread->threaded->user, CommentCreatedNotification::class,);
+        Notification::assertSentTo($thread->threaded->user, ThreadCreatedNotification::class,);
     }
 
     public function testHandleDoesNotSendNotificationWhenConfigIsFalse(): void
     {
-        Config::set('threads.listeners.comment_created', false);
+        Config::set('threads.listeners.thread_created', false);
 
         $user = $this->getNewUser();
         $threaded = $this->getNewThreaded();
@@ -80,14 +73,9 @@ class CommentCreatedListenerTest extends TestCase
             'content' => 'This is a comment',
         ]);
 
-        $comment = Comment::factory()->create([
-            'user_id' => $user->id,
-            'thread_id' => $thread->id,
-        ]);
-
         Notification::fake();
 
-        event(new CommentCreated($comment));
+        event(new ThreadCreated($thread));
 
         Notification::assertNothingSent();
     }

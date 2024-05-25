@@ -89,7 +89,7 @@ class ThreadCreatedTest extends TestCase
         $data = $message->toArray();
 
         $this->assertSame('info', $data['level']);
-        $this->assertSame('System Notification', $data['subject']);
+        $this->assertSame('New Thread', $data['subject']);
         $this->assertSame('You have a new thread from Test User', $data['introLines'][0]);
         $this->assertSame('View Thread', $data['actionText']);
         $this->assertSame('http://localhost/thread?thread=some_string', $data['actionUrl']);
