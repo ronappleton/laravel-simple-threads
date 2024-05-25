@@ -50,7 +50,7 @@ class CommenterUnblockedListenerTest extends TestCase
 
         event(new CommenterUnblocked($blockedCommenter));
 
-        Notification::assertSentTo($blockedCommenter->blockedUser, CommenterUnblockedNotification::class,);
+        Notification::assertSentTo($blockedCommenter->blockedUser, CommenterUnblockedNotification::class);
     }
 
     public function testHandleDoesNotSendNotificationWhenConfigIsFalse(): void

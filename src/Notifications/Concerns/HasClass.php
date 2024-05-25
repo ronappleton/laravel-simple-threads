@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 trait HasClass
 {
     /**
-     * @param class-string $class
+     * @param  class-string  $class
      */
     public function getSnakeName(string $class): string
     {

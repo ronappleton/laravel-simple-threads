@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Controllers\Comment;
 
 use Appleton\SpatieLaravelPermissionMock\Models\PermissionUuid;
-use Appleton\Threads\Events\ReportResolved;
-use Appleton\Threads\Listeners\ReportResolvedListener;
 use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Models\ThreadReport;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Event;
 use Spatie\TestTime\TestTime;
 use Tests\TestCase;
 

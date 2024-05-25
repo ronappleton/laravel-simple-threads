@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Tests\Unit\Notifications;
 
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
-use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
-use Appleton\Threads\Notifications\CommentCreated;
 use Appleton\Threads\Notifications\ThreadLocked;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
+use Illuminate\Support\Facades\Config;
 use Mockery;
 use Tests\TestCase;
 
@@ -71,7 +69,7 @@ class ThreadLockedTest extends TestCase
 
         $this->assertInstanceOf(BroadcastMessage::class, $message);
         $this->assertIsArray($message->data);
-        
+
         $data = $message->data;
 
         $this->assertSame('Your thread has been locked', $data['message']);

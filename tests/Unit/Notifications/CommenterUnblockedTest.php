@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Tests\Unit\Notifications;
 
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
-use Appleton\Threads\Notifications\CommenterUnblocked;
 use Appleton\Threads\Models\BlockedCommenter;
-use Illuminate\Support\Facades\Config;
+use Appleton\Threads\Notifications\CommenterUnblocked;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
+use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
 class CommenterUnblockedTest extends TestCase
@@ -68,7 +68,7 @@ class CommenterUnblockedTest extends TestCase
 
         $this->assertInstanceOf(BroadcastMessage::class, $message);
         $this->assertIsArray($message->data);
-        
+
         $data = $message->data;
 
         $this->assertSame('You have been unblocked by Test User', $data['message']);

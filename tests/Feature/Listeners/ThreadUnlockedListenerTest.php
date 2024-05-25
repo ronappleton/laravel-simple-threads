@@ -56,7 +56,7 @@ class ThreadUnlockedListenerTest extends TestCase
 
         event(new ThreadUnlocked($thread));
 
-        Notification::assertSentTo($thread->threaded->user, ThreadUnlockedNotification::class,);
+        Notification::assertSentTo($thread->threaded->user, ThreadUnlockedNotification::class);
     }
 
     public function testHandleDoesNotSendNotificationWhenConfigIsFalse(): void

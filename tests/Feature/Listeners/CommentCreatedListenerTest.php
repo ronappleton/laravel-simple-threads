@@ -12,7 +12,6 @@ use Appleton\Threads\Notifications\CommentCreated as CommentCreatedNotification;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class CommentCreatedListenerTest extends TestCase
@@ -63,7 +62,7 @@ class CommentCreatedListenerTest extends TestCase
 
         event(new CommentCreated($comment));
 
-        Notification::assertSentTo($comment->thread->threaded->user, CommentCreatedNotification::class,);
+        Notification::assertSentTo($comment->thread->threaded->user, CommentCreatedNotification::class);
     }
 
     public function testHandleDoesNotSendNotificationWhenConfigIsFalse(): void

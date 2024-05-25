@@ -11,7 +11,7 @@ class CommenterBlockedListener
 {
     public function handle(CommenterBlocked $event): void
     {
-        if (!config()->boolean('threads.listeners.commenter_blocked', false)) {
+        if (! config()->boolean('threads.listeners.commenter_blocked', false)) {
             return;
         }
 

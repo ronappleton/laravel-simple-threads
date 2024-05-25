@@ -6,7 +6,6 @@ namespace Tests\Feature\Listeners;
 
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
 use Appleton\Threads\Events\ThreadLocked;
-use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Notifications\ThreadLocked as ThreadLockedNotification;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -57,7 +56,7 @@ class ThreadLockedListenerTest extends TestCase
 
         event(new ThreadLocked($thread));
 
-        Notification::assertSentTo($thread->threaded->user, ThreadLockedNotification::class,);
+        Notification::assertSentTo($thread->threaded->user, ThreadLockedNotification::class);
     }
 
     public function testHandleDoesNotSendNotificationWhenConfigIsFalse(): void

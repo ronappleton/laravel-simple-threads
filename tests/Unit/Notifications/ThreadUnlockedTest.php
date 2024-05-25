@@ -7,10 +7,10 @@ namespace Tests\Unit\Notifications;
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Notifications\ThreadUnlocked;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
+use Illuminate\Support\Facades\Config;
 use Mockery;
 use Tests\TestCase;
 
@@ -69,7 +69,7 @@ class ThreadUnlockedTest extends TestCase
 
         $this->assertInstanceOf(BroadcastMessage::class, $message);
         $this->assertIsArray($message->data);
-        
+
         $data = $message->data;
 
         $this->assertSame('Your thread has been unlocked', $data['message']);

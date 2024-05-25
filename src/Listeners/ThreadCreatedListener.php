@@ -12,7 +12,7 @@ class ThreadCreatedListener
 {
     public function handle(ThreadCreated $event): void
     {
-        if (!config()->boolean('threads.listeners.thread_created', false)) {
+        if (! config()->boolean('threads.listeners.thread_created', false)) {
             return;
         }
 

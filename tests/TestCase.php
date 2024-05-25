@@ -6,7 +6,6 @@ namespace Tests;
 
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
 use Appleton\Threads\Models\Thread;
-use Appleton\Threads\Providers\EventServiceProvider;
 use Appleton\Threads\ServiceProvider;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;

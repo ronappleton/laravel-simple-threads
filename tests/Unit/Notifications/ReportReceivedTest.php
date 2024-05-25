@@ -8,13 +8,11 @@ use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
 use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Models\ThreadReport;
-use Appleton\Threads\Notifications\CommentCreated;
 use Appleton\Threads\Notifications\ReportReceived;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
-use Mockery;
+use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
 class ReportReceivedTest extends TestCase
@@ -43,7 +41,7 @@ class ReportReceivedTest extends TestCase
         $user->setAttribute('avatar', 'some_url');
 
         $thread = new Thread();
-        $thread->setAttribute('id',  'some_string');
+        $thread->setAttribute('id', 'some_string');
 
         $comment = new Comment();
         $comment->thread_id = 'some_string';
@@ -74,7 +72,7 @@ class ReportReceivedTest extends TestCase
         $user->setAttribute('avatar', 'some_url');
 
         $thread = new Thread();
-        $thread->setAttribute('id',  'some_string');
+        $thread->setAttribute('id', 'some_string');
 
         $comment = new Comment();
         $comment->thread_id = 'some_string';
@@ -108,7 +106,7 @@ class ReportReceivedTest extends TestCase
 
         $this->assertInstanceOf(BroadcastMessage::class, $message);
         $this->assertIsArray($message->data);
-        
+
         $data = $message->data;
 
         $this->assertSame('A comment report has been received', $data['message']);

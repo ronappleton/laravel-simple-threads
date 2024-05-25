@@ -12,7 +12,7 @@ class CommentCreatedListener
 {
     public function handle(CommentCreated $event): void
     {
-        if (!config()->boolean('threads.listeners.comment_created', false)) {
+        if (! config()->boolean('threads.listeners.comment_created', false)) {
             return;
         }
 

@@ -12,7 +12,7 @@ class LikeReceivedListener
 {
     public function handle(LikeReceived $event): void
     {
-        if (!config()->boolean('threads.listeners.like_received', false)) {
+        if (! config()->boolean('threads.listeners.like_received', false)) {
             return;
         }
 

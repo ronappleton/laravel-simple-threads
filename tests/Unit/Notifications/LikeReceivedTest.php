@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace Tests\Unit\Notifications;
 
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
-use Appleton\Threads\Models\Comment;
 use Appleton\Threads\Models\Thread;
 use Appleton\Threads\Models\ThreadLike;
-use Appleton\Threads\Notifications\CommentCreated;
 use Appleton\Threads\Notifications\LikeReceived;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
+use Illuminate\Support\Facades\Config;
 use Mockery;
 use Tests\TestCase;
 
@@ -49,7 +47,6 @@ class LikeReceivedTest extends TestCase
         $like->setAttribute('thread', $thread);
         $like->setAttribute('user', $user);
 
-
         $this->notification = new LikeReceived($like);
     }
 
@@ -78,7 +75,7 @@ class LikeReceivedTest extends TestCase
 
         $this->assertInstanceOf(BroadcastMessage::class, $message);
         $this->assertIsArray($message->data);
-        
+
         $data = $message->data;
 
         $this->assertSame('You have a new like from Test User', $data['message']);

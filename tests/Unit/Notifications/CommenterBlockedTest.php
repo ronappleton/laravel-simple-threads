@@ -6,15 +6,11 @@ namespace Tests\Unit\Notifications;
 
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
 use Appleton\Threads\Models\BlockedCommenter;
-use Appleton\Threads\Models\Comment;
-use Appleton\Threads\Models\Thread;
-use Appleton\Threads\Notifications\CommentCreated;
 use Appleton\Threads\Notifications\CommenterBlocked;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
-use Mockery;
+use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
 class CommenterBlockedTest extends TestCase
@@ -76,7 +72,7 @@ class CommenterBlockedTest extends TestCase
 
         $this->assertInstanceOf(BroadcastMessage::class, $message);
         $this->assertIsArray($message->data);
-        
+
         $data = $message->data;
 
         $this->assertSame('You have been blocked by Test Blocker', $data['message']);
@@ -93,7 +89,7 @@ class CommenterBlockedTest extends TestCase
         $data = $message->toArray();
 
         $this->assertSame('info', $data['level']);
-        $this->assertSame('You have been blocked from starting threads and commenting', $data['subject'], );
+        $this->assertSame('You have been blocked from starting threads and commenting', $data['subject']);
         $this->assertSame('You have been blocked by Test Blocker', $data['introLines'][0]);
     }
 

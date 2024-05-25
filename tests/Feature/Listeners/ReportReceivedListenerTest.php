@@ -13,7 +13,6 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
-use function Psy\debug;
 
 class ReportReceivedListenerTest extends TestCase
 {

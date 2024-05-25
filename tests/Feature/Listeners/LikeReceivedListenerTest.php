@@ -62,7 +62,7 @@ class LikeReceivedListenerTest extends TestCase
 
         event(new LikeReceived($threadLike));
 
-        Notification::assertSentTo($thread->threaded->user, LikeReceivedNotification::class,);
+        Notification::assertSentTo($thread->threaded->user, LikeReceivedNotification::class);
     }
 
     public function testHandleDoesNotSendNotificationWhenConfigIsFalse(): void

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Appleton\Threads\Notifications\Concerns;
 
-use Illuminate\Support\Str;
-
 trait HasConfig
 {
     use HasClass;

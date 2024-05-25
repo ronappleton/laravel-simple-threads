@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Tests\Unit\Notifications;
 
 use Appleton\SpatieLaravelPermissionMock\Models\UserUuid;
-use Appleton\Threads\Notifications\ThreadCreated;
 use Appleton\Threads\Models\Thread;
-use Illuminate\Support\Facades\Config;
+use Appleton\Threads\Notifications\ThreadCreated;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
+use Illuminate\Support\Facades\Config;
 use Mockery;
 use Tests\TestCase;
 
@@ -71,7 +71,7 @@ class ThreadCreatedTest extends TestCase
 
         $this->assertInstanceOf(BroadcastMessage::class, $message);
         $this->assertIsArray($message->data);
-        
+
         $data = $message->data;
 
         $this->assertSame('You have a new thread from Test User', $data['message']);

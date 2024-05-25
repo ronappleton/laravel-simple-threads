@@ -12,7 +12,7 @@ class ThreadLockedListener
 {
     public function handle(ThreadLocked $event): void
     {
-        if (!config()->boolean('threads.listeners.thread_locked', false)) {
+        if (! config()->boolean('threads.listeners.thread_locked', false)) {
             return;
         }
 
