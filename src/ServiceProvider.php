@@ -16,19 +16,15 @@ class ServiceProvider extends BaseServiceProvider
 
         $this->app->register(Providers\EventServiceProvider::class);
         $this->app->register(Providers\RouteServiceProvider::class);
+
+        $this->publishes([
+            __DIR__.'/../config/threads.php' => config_path('threads.php'),
+        ]);
     }
 
     public function boot(): void
     {
-        $this->publishes([
-            __DIR__.'/../config/threads.php' => config_path('threads.php'),
-        ]);
-
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-
-        if (app()->environment('testing')) {
-            $this->loadMigrationsFrom(__DIR__.'/../database/migrations/testing');
-        }
 
         $this->commands([
             UnblockCommenterCommand::class,
