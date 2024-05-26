@@ -20,6 +20,10 @@ class ServiceProvider extends BaseServiceProvider
         $this->publishes([
             __DIR__.'/../config/threads.php' => config_path('threads.php'),
         ]);
+
+        $this->publishes([
+            __DIR__ . '/../database/migrations' => database_path('migrations'),
+        ], 'threads-migrations');
     }
 
     public function boot(): void
