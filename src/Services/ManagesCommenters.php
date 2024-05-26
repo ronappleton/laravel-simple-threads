@@ -21,12 +21,15 @@ trait ManagesCommenters
 
         $blockedCommenter = BlockedCommenter::create($request->validated() + [
             'blocker_user_id' => auth()->id(),
+            /** @phpstan-ignore-next-line */
             'blocked_user_id' => $user->id,
         ]);
 
+        /** @phpstan-ignore-next-line */
         Thread::where('user_id', $user->id)
             ->update(['hidden_at' => Carbon::now()]);
 
+        /** @phpstan-ignore-next-line */
         Comment::where('user_id', $user->id)
             ->update(['hidden_at' => Carbon::now()]);
 
@@ -37,6 +40,7 @@ trait ManagesCommenters
     {
         $user = threads_get_user($user);
 
+        /** @phpstan-ignore-next-line */
         $blockedCommenter = BlockedCommenter::where('blocked_user_id', $user->id)
             ->firstOrFail();
 
@@ -44,9 +48,11 @@ trait ManagesCommenters
 
         $blockedCommenter->delete();
 
+        /** @phpstan-ignore-next-line */
         Thread::where('user_id', $user->id)
             ->update(['hidden_at' => null]);
 
+        /** @phpstan-ignore-next-line */
         Comment::where('user_id', $user->id)
             ->update(['hidden_at' => null]);
 

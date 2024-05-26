@@ -18,7 +18,7 @@ class ThreadResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'creator' => $this->creator,
+            'creator' => $this->user,
             'title' => $this->title,
             'content' => $this->content,
             'locked_at' => $this->locked_at,

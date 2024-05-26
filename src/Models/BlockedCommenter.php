@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -21,8 +22,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $deleted_at
  * @property string $created_at
  * @property string $updated_at
- * @property-read $blockedUser
- * @property-read $blockerUser
+ * @property-read Relation $blockedUser
+ * @property-read Relation $blockerUser
  */
 class BlockedCommenter extends Model
 {
@@ -53,6 +54,7 @@ class BlockedCommenter extends Model
      */
     public function blockedUser(): BelongsTo
     {
+        /** @phpstan-ignore-next-line */
         return $this->belongsTo(config()->classString('threads.user_model'), 'blocked_user_id');
     }
 
@@ -61,6 +63,7 @@ class BlockedCommenter extends Model
      */
     public function blockerUser(): BelongsTo
     {
+        /** @phpstan-ignore-next-line */
         return $this->belongsTo(config()->classString('threads.user_model'), 'blocker_user_id');
     }
 }

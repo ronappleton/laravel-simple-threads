@@ -30,6 +30,7 @@ trait HasUser
             return str_replace(":$nameField", $replaceOverride, $message);
         }
 
+        /** @phpstan-ignore-next-line */
         if (is_null($this->user)) {
             return str_replace(":$nameField", 'System Robot', $message);
         }

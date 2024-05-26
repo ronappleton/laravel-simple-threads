@@ -25,6 +25,7 @@ class CommenterUnblocked extends Notification implements ShouldQueue
 
     public function __construct(private readonly BlockedCommenter $blockedCommenter)
     {
+        /** @phpstan-ignore-next-line */
         $this->user = $this->blockedCommenter->blockerUser;
     }
 

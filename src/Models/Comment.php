@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -23,7 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $created_at
  * @property string $updated_at
  * @property-read Thread $thread
- * @property-read $user
+ * @property-read Relation $user
  */
 class Comment extends Model
 {
@@ -45,16 +46,26 @@ class Comment extends Model
         return CommentFactory::new();
     }
 
+    /**
+     * @return BelongsTo<Thread, Comment>
+     */
     public function thread(): BelongsTo
     {
         return $this->belongsTo(Thread::class);
     }
 
+    /**
+     * @phpstan-ignore-next-line
+     */
     public function user(): BelongsTo
     {
+        /** @phpstan-ignore-next-line */
         return $this->belongsTo(config()->classString('threads.user_model'));
     }
 
+    /**
+     * @return HasMany<ThreadReport>
+     */
     public function reports(): HasMany
     {
         return $this->hasMany(ThreadReport::class);

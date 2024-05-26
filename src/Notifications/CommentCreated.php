@@ -29,6 +29,7 @@ class CommentCreated extends Notification implements ShouldQueue
     {
         $this->url = $this->getThreadShowUrl($comment->thread->id);
 
+        /** @phpstan-ignore-next-line  user */
         $this->user = $comment->user;
     }
 

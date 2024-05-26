@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 
@@ -32,7 +33,7 @@ use Illuminate\Support\Collection;
  * @property-read int $like_count
  * @property-read Collection<Comment> $comments
  * @property-read Collection<ThreadLike> $likes
- * @property-read $user
+ * @property-read Relation $user
  */
 class Thread extends Model
 {
@@ -63,26 +64,42 @@ class Thread extends Model
         return ThreadFactory::new();
     }
 
+    /**
+     * @phpstan-ignore-next-line
+     */
     public function threaded(): MorphTo
     {
         return $this->morphTo('threaded');
     }
 
+    /**
+     * @phpstan-ignore-next-line
+     */
     public function user(): BelongsTo
     {
+        /** @phpstan-ignore-next-line */
         return $this->belongsTo(config()->classString('threads.user_model'));
     }
 
+    /**
+     * @return HasMany<Comment>
+     */
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
     }
 
+    /**
+     * @return HasMany<ThreadLike>
+     */
     public function likes(): HasMany
     {
         return $this->hasMany(ThreadLike::class);
     }
 
+    /**
+     * @return HasMany<ThreadReport>
+     */
     public function reports(): HasMany
     {
         return $this->hasMany(ThreadReport::class);

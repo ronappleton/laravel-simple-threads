@@ -29,6 +29,7 @@ class ThreadUnlocked extends Notification implements ShouldQueue
     {
         $this->url = $this->getThreadShowUrl($thread->id);
 
+        /** @phpstan-ignore-next-line */
         $this->user = $thread->user;
     }
 

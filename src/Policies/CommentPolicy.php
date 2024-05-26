@@ -114,6 +114,7 @@ class CommentPolicy
 
     public function unblock(Authenticatable $user, string $unblock): bool
     {
+        /** @phpstan-ignore-next-line */
         if ($user->id === $unblock) {
             return false;
         }

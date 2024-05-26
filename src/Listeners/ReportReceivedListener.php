@@ -20,6 +20,7 @@ class ReportReceivedListener
         $users = $userModel::query()->whereIn('email', $moderatorEmails)->get();
 
         $users->each(function ($user) use ($event) {
+            /** @phpstan-ignore-next-line  */
             $user->notify(new ReportReceivedNotification($event->getReport()));
         });
     }

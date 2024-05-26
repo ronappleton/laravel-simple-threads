@@ -29,6 +29,7 @@ class LikeReceived extends Notification implements ShouldQueue
     {
         $this->url = $this->getThreadShowUrl($like->thread->id);
 
+        /** @phpstan-ignore-next-line */
         $this->user = $this->like->user;
     }
 

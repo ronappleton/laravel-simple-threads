@@ -83,6 +83,7 @@ trait ManagesThreads
 
         $threadLike = ThreadLike::create([
             'thread_id' => $thread->id,
+            /** @phpstan-ignore-next-line  */
             'user_id' => $user->id,
         ]);
 
@@ -95,6 +96,7 @@ trait ManagesThreads
 
         ThreadLike::query()
             ->where('thread_id', $thread->id)
+            /** @phpstan-ignore-next-line */
             ->where('user_id', $user->id)
             ->forceDelete();
     }

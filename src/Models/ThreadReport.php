@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -21,7 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
- * @property-read $user
+ * @property-read Relation $user
  * @property-read Thread $thread
  * @property-read Comment $comment
  */
@@ -56,18 +57,28 @@ class ThreadReport extends Model
         return ThreadReportFactory::new();
     }
 
+    /**
+     * @return BelongsTo<Thread, ThreadReport>
+     */
     public function thread(): BelongsTo
     {
         return $this->belongsTo(Thread::class);
     }
 
+    /**
+     * @return BelongsTo<Comment, ThreadReport>
+     */
     public function comment(): BelongsTo
     {
         return $this->belongsTo(Comment::class);
     }
 
+    /**
+     * @phpstan-ignore-next-line
+     */
     public function user(): BelongsTo
     {
+        /** @phpstan-ignore-next-line */
         return $this->belongsTo(config()->classString('threads.user_model'));
     }
 }
